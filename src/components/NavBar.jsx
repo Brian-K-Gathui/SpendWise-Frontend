@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 
+//mobile first design ----
 export function NavBar() {
   return (
     <nav className="border-b">
