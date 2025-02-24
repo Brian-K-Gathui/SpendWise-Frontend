@@ -1,4 +1,4 @@
-# SpendWise - Personal & Collaborative Expense Tracker 💵💰💳
+# (Frontend) SpendWise - Personal & Collaborative Expense Tracker 💵💰💳
 
 ## Problem Statement
 
