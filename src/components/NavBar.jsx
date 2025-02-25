@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu, Contact, BookOpen, Star, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import {
@@ -7,70 +7,115 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetFooter,
 } from "./ui/sheet";
 
-//mobile first design ----
 export function NavBar() {
   return (
     <nav className="border-b">
       <div className="flex h-16 items-center px-4 md:px-6">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden bg-[#092C4C]"
+            >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
-            <SheetHeader>
+          <SheetContent side="left" className="flex flex-col">
+            <SheetHeader className="border-b pb-4">
               <SheetTitle>
                 <Link to="/" className="text-xl font-bold">
                   SW
                 </Link>
-                {/* <img src="/logo.png" alt="logo" className="h-8 w-8" /> */}
               </SheetTitle>
             </SheetHeader>
-            <div className="mt-4 flex flex-col space-y-4">
-              <Link
-                to="/"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Home Page
-              </Link>
-              <Link
-                to="/about"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                About Us
-              </Link>
-              <Link
-                to="/features"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Features
-              </Link>
-              <Link
-                to="/support"
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                Support
-              </Link>
+            <div className="flex-1 overflow-y-auto">
+              <div className="mt-4 space-y-3 text-[#092C4C]">
+                <Link
+                  to="/"
+                  className="block py-2 text-sm  font-medium transition-colors hover:text-primary"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/about"
+                  className="block py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  About Us
+                </Link>
+                <Link
+                  to="/features"
+                  className="block py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Features
+                </Link>
+                <Link
+                  to="/support"
+                  className="block py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Support
+                </Link>
+              </div>
+              <div className="mt-6 space-y-3">
+                <Link
+                  to="/contact"
+                  className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  <Contact className="h-4 w-4" />
+                  Contact Us
+                </Link>
+                <Link
+                  to="/blog"
+                  className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Blog
+                </Link>
+                <Link
+                  to="/testimonials"
+                  className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  <Star className="h-4 w-4" />
+                  Testimonials
+                </Link>
+                <Link
+                  to="/careers"
+                  className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-primary"
+                >
+                  <Briefcase className="h-4 w-4" />
+                  Careers
+                </Link>
+              </div>
             </div>
+            <SheetFooter className="mt-auto border-t pt-4">
+              <div className="space-y-4">
+                <div className="grid gap-2">
+                  <Button variant="outline" className="w-full">
+                    Login
+                  </Button>
+                  <Button className="w-full">Sign up</Button>
+                </div>
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
+
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
             <span className="text-xl font-bold">SW</span>
           </Link>
-          {/* <img src="/logo.png" alt="logo" className="h-8 w-8" /> */}
         </div>
         <div className="hidden md:flex md:flex-1 md:items-center md:justify-center">
-          <nav className="flex items-center space-x-6">
+          <nav className="flex items-center space-x-6 text-[#092C4C]">
             <Link
               to="/"
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="text-sm  font-medium transition-colors hover:text-primary"
             >
-              Home Page
+              Home
             </Link>
             <Link
               to="/about"
@@ -97,22 +142,6 @@ export function NavBar() {
             Login
           </Button>
           <Button className="hidden md:flex">Sign up</Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <span className="sr-only">Open menu</span>
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="mt-4 flex flex-col space-y-4">
-                <Button variant="ghost" className="w-full justify-start">
-                  Login
-                </Button>
-                <Button className="w-full justify-start">Sign up</Button>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </nav>
