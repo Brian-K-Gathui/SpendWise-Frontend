@@ -94,10 +94,14 @@ export function NavBar() {
             <SheetFooter className="mt-auto border-t pt-4">
               <div className="space-y-4">
                 <div className="grid gap-2">
-                  <Button variant="outline" className="w-full">
-                    Login
-                  </Button>
-                  <Button className="w-full">Sign up</Button>
+                  <Link to="/Login" className="w-full">
+                    <Button variant="outline" className="w-full">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup" className="w-full">
+                    <Button className="w-full">Sign up</Button>
+                  </Link>
                 </div>
               </div>
             </SheetFooter>
