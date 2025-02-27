@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <div className="min-h-screen bg-white px-4 py-12 md:px-6 lg:px-8 text-[#092C4C]">
+    <div className="min-h-screen bg-background px-4 py-12 md:px-6 lg:px-8 text-primary">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           {/* ------Left Column --------- */}
@@ -18,17 +18,20 @@ export default function Hero() {
             </p>
             <div className="flex gap-4">
               <Button
-                className="bg-black text-white hover:bg-black/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
                 size="lg"
               >
                 Get Started
               </Button>
-              <Button variant="outline" size="lg">
+              <Button
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary/10"
+                size="lg"
+              >
                 Learn More
               </Button>
             </div>
           </div>
-
           {/* Right ------ - Image Grid---- */}
           <div className="grid grid-cols-8 grid-rows-6 gap-4">
             {/* Top  */}
@@ -46,8 +49,7 @@ export default function Hero() {
                 className="h-full w-full rounded-lg object-cover"
               />
             </div>
-
-            {/* chini*/}
+            {/* Bottom */}
             <div className="col-span-5 row-span-4">
               <img
                 src="https://placehold.co/600x400"
