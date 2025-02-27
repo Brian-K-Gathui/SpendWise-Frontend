@@ -102,7 +102,7 @@ export function NavBar() {
                       Login
                     </Button>
                   </Link>
-                  <Link to="/signup" className="w-full">
+                  <Link to="/register" className="w-full">
                     <Button className="w-full">Sign up</Button>
                   </Link>
                 </div>
@@ -153,7 +153,7 @@ export function NavBar() {
               Login
             </Button>
           </Link>
-          <Link to="/signup">
+          <Link to="/register">
             <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
               Sign up
             </Button>
