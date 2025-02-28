@@ -6,7 +6,6 @@ import ConnectWithUs from "../components/ConnectWithUs";
 import MapLayout from "../components/MapLayout";
 import Feature from "../components/Feature";
 
-
 const Home = () => {
   return (
     <>
