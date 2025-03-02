@@ -1,4 +1,5 @@
 import App from "./App";
+import Dashboard from "./pages/Dashbaord";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
@@ -21,6 +22,25 @@ const routers = [
       {
         path: "/register",
         element: <RegistrationPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/sso-callback",
+        element: (
+          <div className="flex min-h-screen items-center justify-center">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-2">
+                Completing authentication...
+              </h2>
+              <p className="text-muted-foreground">
+                Please wait while we finish setting up your account.
+              </p>
+            </div>
+          </div>
+        ),
       },
     ],
   },

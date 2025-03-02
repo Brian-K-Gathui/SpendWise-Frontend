@@ -1,4 +1,12 @@
-import { Menu, Contact, BookOpen, Star, Briefcase } from "lucide-react";
+import {
+  Menu,
+  Contact,
+  BookOpen,
+  Star,
+  Briefcase,
+  User,
+  LogOut,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,8 +17,20 @@ import {
   SheetTrigger,
   SheetFooter,
 } from "./ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useAuth } from "../hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function NavBar() {
+  const { user, isAuthenticated, logout } = useAuth();
+
   return (
     <nav className="border-b border-border">
       <div className="flex h-16 items-center px-4 md:px-6">
@@ -96,16 +116,29 @@ export function NavBar() {
             </div>
             <SheetFooter className="mt-auto border-t border-sidebar-border pt-4">
               <div className="space-y-4">
-                <div className="grid gap-2">
-                  <Link to="/Login" className="w-full">
-                    <Button variant="outline" className="w-full">
-                      Login
+                {isAuthenticated ? (
+                  <div className="grid gap-2">
+                    <Link to="/dashboard" className="w-full">
+                      <Button variant="outline" className="w-full">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button className="w-full" onClick={logout}>
+                      Logout
                     </Button>
-                  </Link>
-                  <Link to="/register" className="w-full">
-                    <Button className="w-full">Sign up</Button>
-                  </Link>
-                </div>
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    <Link to="/login" className="w-full">
+                      <Button variant="outline" className="w-full">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/register" className="w-full">
+                      <Button className="w-full">Sign up</Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </SheetFooter>
           </SheetContent>
@@ -145,19 +178,63 @@ export function NavBar() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/login">
-            <Button
-              variant="ghost"
-              className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
-            >
-              Login
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
-              Sign up
-            </Button>
-          </Link>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
+                    <AvatarFallback>
+                      {user?.firstName?.charAt(0)}
+                      {user?.lastName?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user?.fullName}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button
+                  variant="ghost"
+                  className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
+                  Sign up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

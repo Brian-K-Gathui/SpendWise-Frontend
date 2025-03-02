@@ -8,7 +8,14 @@ import axios from "axios";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 import routes from "./routes";
+import { ClerkProvider } from "@clerk/clerk-react";
 
+// Import your Publishable Key
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
 
 // Configure QueryClient
 const queryClient = new QueryClient({
@@ -33,20 +40,26 @@ const router = createBrowserRouter(routes);
 // Render application
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      {isDev && <ReactQueryDevtools initialIsOpen={false} />}
-    </QueryClientProvider>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+    >
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        {isDev && <ReactQueryDevtools initialIsOpen={false} />}
+      </QueryClientProvider>
+    </ClerkProvider>
   </StrictMode>,
 );

@@ -1,8 +1,10 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useSignUp } from "@clerk/clerk-react";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -10,58 +12,89 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
-
-const formSchema = z
-  .object({
-    fullName: z.string().min(2, {
-      message: "Full name must be at least 2 characters.",
-    }),
-    email: z.string().email({
-      message: "Please enter a valid email address.",
-    }),
-    phoneNumber: z.string().optional(),
-    password: z.string().min(8, {
-      message: "Password must be at least 8 characters.",
-    }),
-    confirmPassword: z.string(),
-    accountType: z.enum(["personal", "business", "family"]),
-    agreeToTerms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms and conditions.",
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+import useAuthStore from "../store/useAuthStore";
 
 const RegistrationPage = () => {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
-      accountType: "personal",
-      agreeToTerms: false,
-    },
-  });
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountType, setAccountType] = useState("personal");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, isLoaded: clerkLoaded } = useSignUp();
+  const { isAuthenticated } = useAuthStore();
 
-  const onSubmit = (values) => {
-    console.log(values);
-    //  API call to register the user
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!clerkLoaded) {
+      toast.error("Authentication system is loading. Please try again.");
+      return;
+    }
+
+    // Basic validation
+    if (password !== confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
+    if (!agreeToTerms) {
+      toast.error("You must agree to the terms and conditions");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Split full name into first and last name
+      const nameParts = fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      // Start the sign-up process with Clerk
+      const result = await signUp.create({
+        firstName,
+        lastName,
+        emailAddress: email,
+        password,
+        phoneNumber,
+        unsafeMetadata: {
+          accountType,
+        },
+      });
+
+      // Check if sign-up needs email verification
+      if (result.status === "complete") {
+        // Complete the sign-up
+        await signUp.setActive({ session: result.createdSessionId });
+        toast.success("Registration successful!");
+        // Redirection will happen automatically due to auth state change
+      } else {
+        // Email verification might be needed
+        const verifications = result.verifications;
+
+        if (verifications.emailAddress.status === "pending") {
+          toast.info("Please check your email to verify your account");
+        }
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error(
+        error.errors?.[0]?.message || "Registration failed. Please try again.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -74,214 +107,172 @@ const RegistrationPage = () => {
             <p className="text-gray-600 text-sm">Register to get started :)</p>
           </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Full Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your full name"
-                        className="h-10 px-3 border border-gray-200 rounded-md"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <Input
+                placeholder="Enter your full name"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Email Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your email address"
-                        className="h-10 px-3 border border-gray-200 rounded-md"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <Input
+                type="email"
+                placeholder="Enter your email address"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your phone number"
-                        className="h-10 px-3 border border-gray-200 rounded-md"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <Input
+                placeholder="Enter your phone number"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password"
-                        className="h-10 px-3 border border-gray-200 rounded-md"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirm your password"
-                        className="h-10 px-3 border border-gray-200 rounded-md"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <Input
+                type="password"
+                placeholder="Confirm your password"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="accountType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Type of Account
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="h-10 px-3 border border-gray-200 rounded-md">
-                          <SelectValue placeholder="Select account type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="personal">Personal</SelectItem>
-                        <SelectItem value="business">Business</SelectItem>
-                        <SelectItem value="family">Family</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Type of Account
+              </label>
+              <Select value={accountType} onValueChange={setAccountType}>
+                <SelectTrigger className="h-10 px-3 border border-gray-200 rounded-md mt-1">
+                  <SelectValue placeholder="Select account type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="personal">Personal</SelectItem>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="family">Family</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-row items-start space-x-2 space-y-0 pt-2">
+              <Checkbox
+                checked={agreeToTerms}
+                onCheckedChange={setAgreeToTerms}
+                className="mt-1 border-gray-300"
               />
+              <div className="space-y-1 leading-none">
+                <label className="text-xs text-gray-600">
+                  I agree to the terms & policy
+                </label>
+              </div>
+            </div>
 
-              <FormField
-                control={form.control}
-                name="agreeToTerms"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-2 space-y-0 pt-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="mt-1 border-gray-300"
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="text-xs text-gray-600">
-                        I agree to the terms & policy
-                      </FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
+            <Button
+              type="submit"
+              className="w-full h-10 bg-black hover:bg-black/90 text-white text-sm font-medium rounded-md mt-2"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                "Register"
+              )}
+            </Button>
 
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 bg-white text-gray-500">or</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <Button
-                type="submit"
-                className="w-full h-10 bg-black hover:bg-black/90 text-white text-sm font-medium rounded-md mt-2"
+                type="button"
+                variant="outline"
+                className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
+                onClick={() =>
+                  signUp?.authenticateWithRedirect({
+                    strategy: "oauth_google",
+                    redirectUrl: "/sso-callback",
+                    redirectUrlComplete: "/dashboard",
+                  })
+                }
               >
-                Register
+                <FcGoogle className="mr-2 h-4 w-4" />
+                Sign in with Google
               </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
+              >
+                <FaApple className="mr-2 h-4 w-4" />
+                Sign in with Apple
+              </Button>
+            </div>
 
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="px-2 bg-white text-gray-500">or</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
-                >
-                  <FcGoogle className="mr-2 h-4 w-4" />
-                  Sign in with Google
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
-                >
-                  <FaApple className="mr-2 h-4 w-4" />
-                  Sign in with Apple
-                </Button>
-              </div>
-
-              <p className="text-center text-xs text-gray-600 mt-4">
-                Already have an account?{" "}
-                <a
-                  href="#"
-                  className="text-blue-600 font-medium hover:text-blue-500"
-                >
-                  Log in
-                </a>
-              </p>
-            </form>
-          </Form>
+            <p className="text-center text-xs text-gray-600 mt-4">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-600 font-medium hover:text-blue-500"
+              >
+                Log in
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
 
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className=" absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
           <img
-            src="https://placehold.co/600x400"
+            src="/placeholder.svg?height=800&width=600"
             alt="Red piggy bank with white polka dots"
             className="w-full h-full object-cover rounded-tl-3xl rounded-bl-3xl"
             style={{

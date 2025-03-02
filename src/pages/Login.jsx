@@ -1,17 +1,60 @@
 import { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useSignIn } from "@clerk/clerk-react";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2 } from 'lucide-react';
+import useAuthStore from "../store/useAuthStore";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, isLoaded: clerkLoaded } = useSignIn();
+  const { isAuthenticated } = useAuthStore();
 
-  const handleSubmit = (e) => {
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with:", { email, password, rememberMe });
+
+    if (!clerkLoaded) {
+      toast.error("Authentication system is loading. Please try again.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Start the sign-in process with Clerk
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      if (result.status === "complete") {
+        // Complete the sign-in
+        await signIn.setActive({ session: result.createdSessionId });
+        toast.success("Login successful!");
+        // Redirection will happen automatically due to auth state change
+      } else {
+        // Handle additional steps if needed (like 2FA)
+        toast.info("Additional verification required");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(
+        error.errors?.[0]?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,8 +114,15 @@ const LoginPage = () => {
               </label>
             </div>
 
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
 
             <div className="relative my-6">
@@ -87,7 +137,16 @@ const LoginPage = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Button variant="outline" type="button" className="w-full">
+              <Button
+                variant="outline"
+                type="button"
+                className="w-full"
+                onClick={() => signIn?.authenticateWithRedirect({
+                  strategy: "oauth_google",
+                  redirectUrl: "/sso-callback",
+                  redirectUrlComplete: "/dashboard"
+                })}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
@@ -134,9 +193,9 @@ const LoginPage = () => {
             <span className="text-muted-foreground">
               Don't have an account?
             </span>{" "}
-            <a href="#" className="text-primary font-medium hover:underline">
+            <Link to="/register" className="text-primary font-medium hover:underline">
               Sign up
-            </a>
+            </Link>
           </div>
         </div>
       </div>
