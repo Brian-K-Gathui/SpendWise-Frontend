@@ -1,6 +1,6 @@
 import { Menu, Contact, BookOpen, Star, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
