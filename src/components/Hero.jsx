@@ -1,4 +1,9 @@
 import { Button } from "@/components/ui/button";
+import photos1 from "../assets/photos/20bob coin.jpg";
+import photos2 from "../assets/photos/100bob handover.jpg";
+import photos3 from "../assets/photos/Card Handling.jpg";
+import photos4 from "../assets/photos/Coins drop.jpg";
+import photos5 from "../assets/photos/Money flower pot.jpg";
 
 export default function Hero() {
   return (
@@ -37,39 +42,39 @@ export default function Hero() {
             {/* Top  */}
             <div className="col-span-3 row-span-2">
               <img
-                src="https://placehold.co/600x400"
+              src={photos1}
                 alt="Money jar"
-                className="h-full w-full rounded-lg object-cover"
+                className="h-full w-full rounded-br-[140px] object-cover"
               />
             </div>
             <div className="col-span-5 row-span-2">
               <img
-                src="https://placehold.co/600x400"
+                src={photos2}
                 alt="Coins spilling"
-                className="h-full w-full rounded-lg object-cover"
+                className="h-full w-full rounded-bl-[140px] object-cover"
               />
             </div>
             {/* Bottom */}
             <div className="col-span-5 row-span-4">
               <img
-                src="https://placehold.co/600x400"
+                src={photos3}
                 alt="Dollar bills"
-                className="h-full w-full rounded-lg object-cover"
+                className="h-full w-full rounded-tr-[140px] object-cover"
               />
             </div>
             <div className="col-span-3 row-span-4 flex flex-col gap-4">
               <div className="h-1/2">
                 <img
-                  src="https://placehold.co/600x400"
+                  src={photos4}
                   alt="Credit card transaction"
-                  className="h-full w-full rounded-lg object-cover"
+                  className="h-full w-full rounded-bl-[140px] object-cover"
                 />
               </div>
               <div className="h-1/2">
                 <img
-                  src="https://placehold.co/600x400"
+                  src={photos5}
                   alt="Money counting"
-                  className="h-full w-full rounded-lg object-cover"
+                  className="h-full w-full rounded-tl-[140px] object-cover"
                 />
               </div>
             </div>

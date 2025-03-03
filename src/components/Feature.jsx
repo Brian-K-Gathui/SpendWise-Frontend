@@ -1,3 +1,7 @@
+import photos1 from "../assets/photos/ladies smiling.jpg";
+import photos2 from "../assets/photos/housefund.jpg";
+import photos3 from "../assets/photos/wallet.jpg";
+
 export default function Feature() {
   return (
     <div className="min-h-screen bg-white px-4 py-12 md:px-6 lg:px-8 text-[#092C4C]">
@@ -147,7 +151,7 @@ export default function Feature() {
           <div className="flex flex-col items-center flex-1">
             <div className="mb-4 w-full">
               <img
-                src="https://placehold.co/600x400"
+                src={photos1}
                 alt="Create account"
                 className="w-full h-auto rounded"
               />
@@ -164,7 +168,7 @@ export default function Feature() {
           <div className="flex flex-col items-center flex-1">
             <div className="mb-4 w-full">
               <img
-                src="https://placehold.co/600x400"
+                src={photos2}
                 alt="Set budgets"
                 className="w-full h-auto rounded"
               />
@@ -181,7 +185,7 @@ export default function Feature() {
           <div className="flex flex-col items-center flex-1">
             <div className="mb-4 w-full">
               <img
-                src="https://placehold.co/600x400"
+                src={photos3}
                 alt="Categorize expenses"
                 className="w-full h-auto rounded"
               />
