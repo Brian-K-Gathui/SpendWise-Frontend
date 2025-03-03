@@ -1,5 +1,6 @@
 import { Menu, Contact, BookOpen, Star, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "../assets/photos/spendwise Logo/1.svg"
 import { Button } from "./ui/button";
 import {
   Sheet,
@@ -31,8 +32,10 @@ export function NavBar() {
           >
             <SheetHeader className="border-b border-sidebar-border pb-4">
               <SheetTitle>
-                <Link to="/" className="text-xl font-bold">
-                  SW
+
+              <img src={logo} alt="logo"  className="h-10 w-10"/>
+                <Link to="/" className="h-8 w-8">
+                  MW
                 </Link>
               </SheetTitle>
             </SheetHeader>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import loginPhoto from "../assets/photos/Login.jpg";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -146,8 +147,8 @@ const LoginPage = () => {
       <div className="hidden md:block md:w-1/2 bg-gray-100 rounded-l-[140px] overflow-hidden">
         <div className="h-full relative">
           <img
-            src="https://placehold.co/600x400"
-            alt="People on coins"
+            src={loginPhoto}
+            alt="Login Background"
             className="w-full h-full object-cover"
           />
         </div>

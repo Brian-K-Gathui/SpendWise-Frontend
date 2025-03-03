@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import RegistrationPhoto from "../assets/photos/Registration.jpg";
 import {
   Select,
   SelectContent,
@@ -265,7 +266,7 @@ const RegistrationPage = () => {
               <p className="text-center text-xs text-gray-600 mt-4">
                 Already have an account?{" "}
                 <a
-                  href="#"
+                  href="/Login"
                   className="text-blue-600 font-medium hover:text-blue-500"
                 >
                   Log in
@@ -281,7 +282,7 @@ const RegistrationPage = () => {
         <div className="absolute inset-0">
           <div className=" absolute inset-0"></div>
           <img
-            src="https://placehold.co/600x400"
+            src={RegistrationPhoto}
             alt="Red piggy bank with white polka dots"
             className="w-full h-full object-cover rounded-tl-3xl rounded-bl-3xl"
             style={{
