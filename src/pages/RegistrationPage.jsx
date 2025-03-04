@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useSignUp } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
@@ -18,16 +18,14 @@ import { FaApple } from "react-icons/fa";
 import useAuthStore from "../store/useAuthStore";
 
 const RegistrationPage = () => {
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [accountType, setAccountType] = useState("personal");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signUp, isLoaded: clerkLoaded } = useSignUp();
+  const { isLoaded, signUp } = useSignUp();
   const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -37,14 +35,8 @@ const RegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!clerkLoaded) {
+    if (!isLoaded) {
       toast.error("Authentication system is loading. Please try again.");
-      return;
-    }
-
-    // Basic validation
-    if (password !== confirmPassword) {
-      toast.error("Passwords don't match");
       return;
     }
 
@@ -56,37 +48,18 @@ const RegistrationPage = () => {
     try {
       setIsLoading(true);
 
-      // Split full name into first and last name
-      const nameParts = fullName.trim().split(/\s+/);
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
-
       // Start the sign-up process with Clerk
-      const result = await signUp.create({
-        firstName,
-        lastName,
+      await signUp.create({
         emailAddress: email,
         password,
-        phoneNumber,
-        unsafeMetadata: {
-          accountType,
-        },
       });
 
-      // Check if sign-up needs email verification
-      if (result.status === "complete") {
-        // Complete the sign-up
-        await signUp.setActive({ session: result.createdSessionId });
-        toast.success("Registration successful!");
-        // Redirection will happen automatically due to auth state change
-      } else {
-        // Email verification might be needed
-        const verifications = result.verifications;
+      // After sign up is created, attempt to sign in
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
-        if (verifications.emailAddress.status === "pending") {
-          toast.info("Please check your email to verify your account");
-        }
-      }
+      // Navigate to the verification page
+      navigate("/verify-email");
+      toast.info("Please check your email for a verification code.");
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(
@@ -94,6 +67,23 @@ const RegistrationPage = () => {
       );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleOAuthSignUp = (strategy) => {
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      signUp.authenticateWithRedirect({
+        strategy,
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/dashboard",
+      });
+    } catch (error) {
+      console.error("OAuth sign up error:", error);
+      toast.error("Failed to initiate OAuth sign up. Please try again.");
     }
   };
 
@@ -110,19 +100,6 @@ const RegistrationPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <Input
-                placeholder="Enter your full name"
-                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">
                 Email Address
               </label>
               <Input
@@ -137,18 +114,6 @@ const RegistrationPage = () => {
 
             <div>
               <label className="text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
-              <Input
-                placeholder="Enter your phone number"
-                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">
                 Password
               </label>
               <Input
@@ -157,20 +122,6 @@ const RegistrationPage = () => {
                 className="h-10 px-3 border border-gray-200 rounded-md mt-1"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
-              <Input
-                type="password"
-                placeholder="Confirm your password"
-                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
@@ -233,24 +184,19 @@ const RegistrationPage = () => {
                 type="button"
                 variant="outline"
                 className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
-                onClick={() =>
-                  signUp?.authenticateWithRedirect({
-                    strategy: "oauth_google",
-                    redirectUrl: "/sso-callback",
-                    redirectUrlComplete: "/dashboard",
-                  })
-                }
+                onClick={() => handleOAuthSignUp("oauth_google")}
               >
                 <FcGoogle className="mr-2 h-4 w-4" />
-                Sign in with Google
+                Sign up with Google
               </Button>
               <Button
                 type="button"
                 variant="outline"
                 className="h-9 text-xs border border-gray-200 hover:bg-gray-50 rounded-md"
+                onClick={() => handleOAuthSignUp("oauth_apple")}
               >
                 <FaApple className="mr-2 h-4 w-4" />
-                Sign in with Apple
+                Sign up with Apple
               </Button>
             </div>
 

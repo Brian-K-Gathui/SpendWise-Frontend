@@ -44,6 +44,7 @@ createRoot(document.getElementById("root")).render(
       publishableKey={PUBLISHABLE_KEY}
       afterSignInUrl="/dashboard"
       afterSignUpUrl="/dashboard"
+      fallbackRedirectUrl="/dashboard"
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />

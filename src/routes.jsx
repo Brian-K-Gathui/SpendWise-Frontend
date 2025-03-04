@@ -4,6 +4,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
+import VerifyEmail from "./pages/VerifyEmail";
 
 const routers = [
   {
@@ -22,6 +23,10 @@ const routers = [
       {
         path: "/register",
         element: <RegistrationPage />,
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyEmail />,
       },
       {
         path: "/dashboard",
