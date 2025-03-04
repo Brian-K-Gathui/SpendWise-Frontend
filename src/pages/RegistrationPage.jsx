@@ -20,6 +20,8 @@ import useAuthStore from "../store/useAuthStore";
 const RegistrationPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [accountType, setAccountType] = useState("personal");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +54,8 @@ const RegistrationPage = () => {
       await signUp.create({
         emailAddress: email,
         password,
+        firstName,
+        lastName,
       });
 
       // After sign up is created, attempt to sign in
@@ -60,10 +64,10 @@ const RegistrationPage = () => {
       // Navigate to the verification page
       navigate("/verify-email");
       toast.info("Please check your email for a verification code.");
-    } catch (error) {
-      console.error("Registration error:", error);
+    } catch (err) {
+      console.error("Registration error:", err);
       toast.error(
-        error.errors?.[0]?.message || "Registration failed. Please try again.",
+        err.errors?.[0]?.message || "Registration failed. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -98,6 +102,34 @@ const RegistrationPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              <Input
+                type="text"
+                placeholder="Enter your first name"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <Input
+                type="text"
+                placeholder="Enter your last name"
+                className="h-10 px-3 border border-gray-200 rounded-md mt-1"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Email Address

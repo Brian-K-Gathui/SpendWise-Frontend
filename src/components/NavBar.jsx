@@ -4,8 +4,7 @@ import {
   BookOpen,
   Star,
   Briefcase,
-  User,
-  LogOut,
+  Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,20 +15,13 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
-} from "./ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/sheet";
+
+import { SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { useAuth } from "../hooks/useAuth";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function NavBar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   return (
     <nav className="border-b border-border">
@@ -88,35 +80,35 @@ export function NavBar() {
                   to="/contact"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Contact className="h-4 w-4" />
-                  Contact Us
+                  <Contact className="h-4 w-4" /> Contact Us
                 </Link>
                 <Link
                   to="/blog"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <BookOpen className="h-4 w-4" />
-                  Blog
+                  <BookOpen className="h-4 w-4" /> Blog
                 </Link>
                 <Link
                   to="/testimonials"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Star className="h-4 w-4" />
-                  Testimonials
+                  <Star className="h-4 w-4" /> Testimonials
                 </Link>
                 <Link
                   to="/careers"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Briefcase className="h-4 w-4" />
-                  Careers
+                  <Briefcase className="h-4 w-4" /> Careers
                 </Link>
               </div>
             </div>
             <SheetFooter className="mt-auto border-t border-sidebar-border pt-4">
               <div className="space-y-4">
-                {isAuthenticated ? (
+                {isLoading ? (
+                  <div className="flex justify-center py-2">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  </div>
+                ) : isAuthenticated ? (
                   <div className="grid gap-2">
                     <Link to="/dashboard" className="w-full">
                       <Button variant="outline" className="w-full">
@@ -129,21 +121,20 @@ export function NavBar() {
                   </div>
                 ) : (
                   <div className="grid gap-2">
-                    <Link to="/login" className="w-full">
+                    <SignInButton mode="modal">
                       <Button variant="outline" className="w-full">
                         Login
                       </Button>
-                    </Link>
-                    <Link to="/register" className="w-full">
+                    </SignInButton>
+                    <SignUpButton mode="modal">
                       <Button className="w-full">Sign up</Button>
-                    </Link>
+                    </SignUpButton>
                   </div>
                 )}
               </div>
             </SheetFooter>
           </SheetContent>
         </Sheet>
-
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
             <span className="text-xl font-bold text-primary">SW</span>
@@ -178,61 +169,25 @@ export function NavBar() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
-                    <AvatarFallback>
-                      {user?.firstName?.charAt(0)}
-                      {user?.lastName?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {user?.fullName}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user?.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={logout} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : isAuthenticated ? (
+            <UserButton afterSignOutUrl="/" />
           ) : (
             <>
-              <Link to="/login">
+              <SignInButton mode="modal">
                 <Button
                   variant="ghost"
                   className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
                 >
                   Login
                 </Button>
-              </Link>
-              <Link to="/register">
+              </SignInButton>
+              <SignUpButton mode="modal">
                 <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
                   Sign up
                 </Button>
-              </Link>
+              </SignUpButton>
             </>
           )}
         </div>
