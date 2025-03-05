@@ -42,6 +42,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
+      signInUrl="/login"
+      signUpUrl="/register"
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/verify-email"
+      afterVerifyEmailUrl="/dashboard"
       fallbackRedirectUrl="/dashboard"
     >
       <QueryClientProvider client={queryClient}>

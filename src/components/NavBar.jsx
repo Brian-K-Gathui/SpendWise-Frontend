@@ -172,7 +172,14 @@ export function NavBar() {
           {isLoading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : isAuthenticated ? (
-            <UserButton afterSignOutUrl="/" />
+            <div className="flex items-center gap-2">
+              <Link to="/dashboard">
+                <Button variant="ghost" size="sm" className="hidden md:flex">
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton afterSignOutUrl="/" />
+            </div>
           ) : (
             <>
               <SignInButton mode="modal">
