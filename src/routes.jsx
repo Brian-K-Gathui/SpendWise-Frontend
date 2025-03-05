@@ -6,6 +6,15 @@ import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
 import VerifyEmail from "./pages/VerifyEmail";
 
+// Import dashboard pages or create placeholder components
+const WalletsPage = () => <Dashboard activePage="wallets" />;
+const TransactionsPage = () => <Dashboard activePage="transactions" />;
+const BudgetsPage = () => <Dashboard activePage="budgets" />;
+const ReportsPage = () => <Dashboard activePage="reports" />;
+const MessagesPage = () => <Dashboard activePage="messages" />;
+const SharedWalletsPage = () => <Dashboard activePage="shared" />;
+const SettingsPage = () => <Dashboard activePage="settings" />;
+
 const routers = [
   {
     path: "/",
@@ -30,7 +39,35 @@ const routers = [
       },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: <Dashboard activePage="overview" />,
+      },
+      {
+        path: "/dashboard/wallets",
+        element: <WalletsPage />,
+      },
+      {
+        path: "/dashboard/transactions",
+        element: <TransactionsPage />,
+      },
+      {
+        path: "/dashboard/budgets",
+        element: <BudgetsPage />,
+      },
+      {
+        path: "/dashboard/reports",
+        element: <ReportsPage />,
+      },
+      {
+        path: "/dashboard/messages",
+        element: <MessagesPage />,
+      },
+      {
+        path: "/dashboard/shared",
+        element: <SharedWalletsPage />,
+      },
+      {
+        path: "/dashboard/settings",
+        element: <SettingsPage />,
       },
       {
         path: "/sso-callback",
