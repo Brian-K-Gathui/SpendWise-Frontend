@@ -112,13 +112,13 @@ export function DashboardSidebar({ open, onOpenChange }) {
           <SheetHeader className="border-b p-4">
             <SheetTitle className="text-lg font-semibold">SpendWise</SheetTitle>
           </SheetHeader>
-          <div className="py-4">{nav}</div>
+          <div className="py-4 overflow-y-auto">{nav}</div>
         </SheetContent>
       </Sheet>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-72 border-r bg-card md:block">
-        <div className="flex h-14 items-center border-b px-4">
+      {/* Desktop Sidebar - Now sticky */}
+      <aside className="hidden md:block w-72 border-r bg-card sticky top-0 h-screen overflow-y-auto">
+        <div className="flex h-14 items-center border-b px-4 sticky top-0 bg-card z-10">
           <h2 className="text-lg font-semibold">SpendWise</h2>
         </div>
         <div className="py-4">{nav}</div>
