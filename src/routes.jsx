@@ -24,7 +24,7 @@ const routers = [
       },
       {
         path: "/register",
-        element: < RegistrationPage/>,
+        element: < RegistrationPage />,
       },
 
     ],
