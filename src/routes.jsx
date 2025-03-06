@@ -3,6 +3,10 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
+import MainDashboard from "./pages/Dashboard";
+import DashboardNav from "./components/DashboardNav";
+
+
 
 const routers = [
   {
@@ -20,8 +24,9 @@ const routers = [
       },
       {
         path: "/register",
-        element: <RegistrationPage />,
+        element: < RegistrationPage/>,
       },
+
     ],
   },
 ];

@@ -60,7 +60,7 @@ export function NavBar() {
                   Features
                 </Link>
                 <Link
-                  to="/support"
+                  to="/dashboard"
                   className="block py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
                   Support
