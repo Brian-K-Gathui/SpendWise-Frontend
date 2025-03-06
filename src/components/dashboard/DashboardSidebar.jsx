@@ -6,64 +6,80 @@ import {
   DollarSign,
   Home,
   MessageSquare,
-  PieChart,
+  Search,
   Settings,
   Users,
+  HelpCircle,
+  LogOut,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const sidebarLinks = [
   {
-    title: "Dashboard",
-    icon: Home,
-    href: "/dashboard",
+    section: "DASHBOARD",
+    items: [
+      {
+        title: "Dashboard",
+        icon: Home,
+        href: "/dashboard",
+      },
+      {
+        title: "Wallets",
+        icon: CreditCard,
+        href: "/dashboard/wallets",
+      },
+      {
+        title: "Transactions",
+        icon: DollarSign,
+        href: "/dashboard/transactions",
+      },
+      {
+        title: "Budgets",
+        icon: BarChart3,
+        href: "/dashboard/budgets",
+      },
+    ],
   },
   {
-    title: "Wallets",
-    icon: CreditCard,
-    href: "/dashboard/wallets",
+    section: "COMMUNICATION",
+    items: [
+      {
+        title: "Messages",
+        icon: MessageSquare,
+        href: "/dashboard/messages",
+      },
+      {
+        title: "Shared Wallets",
+        icon: Users,
+        href: "/dashboard/shared",
+      },
+    ],
   },
   {
-    title: "Transactions",
-    icon: DollarSign,
-    href: "/dashboard/transactions",
-  },
-  {
-    title: "Budgets",
-    icon: PieChart,
-    href: "/dashboard/budgets",
-  },
-  {
-    title: "Reports",
-    icon: BarChart3,
-    href: "/dashboard/reports",
-  },
-  {
-    title: "Messages",
-    icon: MessageSquare,
-    href: "/dashboard/messages",
-  },
-  {
-    title: "Shared Wallets",
-    icon: Users,
-    href: "/dashboard/shared",
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    href: "/dashboard/settings",
+    section: "SETTINGS",
+    items: [
+      {
+        title: "Access Control",
+        icon: Shield,
+        href: "/dashboard/access",
+      },
+      {
+        title: "Settings",
+        icon: Settings,
+        href: "/dashboard/settings",
+      },
+    ],
   },
 ];
 
 export function DashboardSidebar({ open, onOpenChange }) {
   const location = useLocation();
+  const { logout } = useAuth();
 
   // Close mobile sidebar on location change
   useEffect(() => {
@@ -71,7 +87,7 @@ export function DashboardSidebar({ open, onOpenChange }) {
     if (isMobile && open) {
       onOpenChange(false);
     }
-  }, [open, onOpenChange]);
+  }, [location.pathname, open, onOpenChange]);
 
   // Fix for sheet popping up on every reload
   useEffect(() => {
@@ -81,47 +97,100 @@ export function DashboardSidebar({ open, onOpenChange }) {
     }
   }, [open, onOpenChange]);
 
-  const nav = (
-    <nav className="grid gap-2 px-2">
-      {sidebarLinks.map((link) => {
-        const Icon = link.icon;
-        const isActive = location.pathname === link.href;
+  const sidebarContent = (
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+      {/* Logo */}
+      <div className="flex h-14 items-center border-b border-sidebar-border px-4">
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 font-semibold text-lg"
+        >
+          <span className="font-bold">SW</span>
+        </Link>
+      </div>
 
-        return (
-          <Link key={link.href} to={link.href}>
-            <Button
-              variant={isActive ? "secondary" : "ghost"}
-              className={cn("w-full justify-start gap-2", {
-                "bg-secondary/50": isActive,
+      {/* Search */}
+      <div className="p-4">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search"
+            className="pl-8 bg-muted/50 border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
+          />
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex-1 overflow-auto py-2">
+        {sidebarLinks.map((section, index) => (
+          <div
+            key={section.section}
+            className={cn("py-2", index !== 0 && "mt-4")}
+          >
+            <h4 className="px-4 text-xs font-medium text-sidebar-foreground/70 mb-1">
+              {section.section}
+            </h4>
+            <nav className="grid gap-1 px-2">
+              {section.items.map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link key={item.href} to={item.href}>
+                    <Button
+                      variant={isActive ? "secondary" : "ghost"}
+                      className={cn(
+                        "w-full justify-start gap-2 text-sidebar-foreground",
+                        {
+                          "bg-sidebar-accent text-sidebar-accent-foreground":
+                            isActive,
+                        },
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.title}
+                    </Button>
+                  </Link>
+                );
               })}
-            >
-              <Icon className="h-5 w-5" />
-              {link.title}
-            </Button>
-          </Link>
-        );
-      })}
-    </nav>
+            </nav>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer Actions */}
+      <div className="mt-auto border-t border-sidebar-border p-4">
+        <nav className="grid gap-1">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-sidebar-foreground"
+          >
+            <HelpCircle className="h-4 w-4" />
+            Help
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-sidebar-foreground hover:text-destructive hover:bg-destructive/10"
+            onClick={() => logout()}
+          >
+            <LogOut className="h-4 w-4" />
+            Log out
+          </Button>
+        </nav>
+      </div>
+    </div>
   );
 
   return (
     <>
       {/* Mobile Sidebar */}
       <Sheet open={open && window.innerWidth < 768} onOpenChange={onOpenChange}>
-        <SheetContent side="left" className="w-72 border-r bg-card p-0">
-          <SheetHeader className="border-b p-4">
-            <SheetTitle className="text-lg font-semibold">SpendWise</SheetTitle>
-          </SheetHeader>
-          <div className="py-4 overflow-y-auto">{nav}</div>
+        <SheetContent side="left" className="w-72 p-0 bg-sidebar">
+          {sidebarContent}
         </SheetContent>
       </Sheet>
 
-      {/* Desktop Sidebar - Now sticky */}
-      <aside className="hidden md:block w-72 border-r bg-card sticky top-0 h-screen overflow-y-auto">
-        <div className="flex h-14 items-center border-b px-4 sticky top-0 bg-card z-10">
-          <h2 className="text-lg font-semibold">SpendWise</h2>
-        </div>
-        <div className="py-4">{nav}</div>
+      {/* Desktop Sidebar - now extends full height */}
+      <aside className="hidden md:block w-72 border-r border-sidebar-border bg-sidebar h-screen overflow-hidden">
+        {sidebarContent}
       </aside>
     </>
   );

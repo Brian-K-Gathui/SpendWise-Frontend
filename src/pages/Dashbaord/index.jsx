@@ -1,124 +1,35 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { WalletCard } from "@/components/dashboard/WalletCard";
-import { GoalCard } from "@/components/dashboard/GoalCard";
-import { TransactionHistory } from "@/components/dashboard/TransactionHistory";
-import { SharedWalletTable } from "@/components/dashboard/SharedWalletTable";
-import { Gamepad, Plane, Umbrella } from "lucide-react";
+import { WalletsPage } from "@/components/dashboard/WalletsPage";
+import { TransactionsPage } from "@/components/dashboard/TransactionsPage";
 import { Navigate } from "react-router-dom";
-
-// Fake data for demonstration
-const fakeTransactions = [
-  {
-    id: "1",
-    date: "2024-03-05",
-    description: "Grocery Shopping",
-    amount: 5000,
-    type: "debit",
-  },
-  {
-    id: "2",
-    date: "2024-03-04",
-    description: "Salary Deposit",
-    amount: 150000,
-    type: "credit",
-  },
-  {
-    id: "3",
-    date: "2024-03-03",
-    description: "Electricity Bill",
-    amount: 2500,
-    type: "debit",
-  },
-];
-
-const fakeSharedWallets = [
-  {
-    id: "1",
-    name: "Family Thanksgiving",
-    team: [
-      { name: "John Doe", avatar: "/placeholder.svg?height=32&width=32" },
-      { name: "Jane Smith", avatar: "/placeholder.svg?height=32&width=32" },
-      { name: "Mike Johnson", avatar: "/placeholder.svg?height=32&width=32" },
-    ],
-    date: "17 Dec 2023",
-    amount: 45000,
-  },
-  {
-    id: "2",
-    name: "Dubai Family Trip",
-    team: [
-      { name: "Alice Brown", avatar: "/placeholder.svg?height=32&width=32" },
-      { name: "Bob Wilson", avatar: "/placeholder.svg?height=32&width=32" },
-    ],
-    date: "15 Dec 2023",
-    amount: 120000,
-  },
-];
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Placeholder components for other dashboard pages
-const WalletsContent = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Wallets</h2>
-    <p className="text-muted-foreground">
-      Manage your wallets and payment methods.
-    </p>
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <WalletCard title="Main Wallet" balance={145320.5} />
-      <WalletCard title="Savings" balance={75000} />
-      <WalletCard title="Emergency Fund" balance={50000} />
-    </div>
-  </div>
-);
-
-const TransactionsContent = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Transactions</h2>
-    <p className="text-muted-foreground">
-      View and manage your transaction history.
-    </p>
-    <TransactionHistory transactions={fakeTransactions} />
-  </div>
-);
-
-const BudgetsContent = () => (
+const BudgetsPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Budgets</h2>
     <p className="text-muted-foreground">
       Set and track your spending budgets.
     </p>
-    <div className="grid gap-4 md:grid-cols-3">
-      <GoalCard
-        title="Holidays"
-        icon={<Plane className="h-4 w-4 text-blue-500" />}
-        current={50000}
-        target={150000}
-      />
-      <GoalCard
-        title="Recreation"
-        icon={<Gamepad className="h-4 w-4 text-green-500" />}
-        current={25000}
-        target={75000}
-      />
-      <GoalCard
-        title="Xbox"
-        icon={<Umbrella className="h-4 w-4 text-orange-500" />}
-        current={35000}
-        target={55000}
-      />
+    <div className="p-8 text-center bg-muted rounded-lg">
+      <h3 className="text-xl font-medium">Coming Soon</h3>
+      <p className="mt-2">
+        We're working on building comprehensive budget tracking features.
+      </p>
     </div>
   </div>
 );
 
-const ReportsContent = () => (
+const ReportsPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Reports</h2>
     <p className="text-muted-foreground">
       View financial reports and analytics.
     </p>
     <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Reports Coming Soon</h3>
+      <h3 className="text-xl font-medium">Coming Soon</h3>
       <p className="mt-2">
         We're working on building comprehensive financial reports for you.
       </p>
@@ -126,7 +37,7 @@ const ReportsContent = () => (
   </div>
 );
 
-const MessagesContent = () => (
+const MessagesPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Messages</h2>
     <p className="text-muted-foreground">
@@ -139,24 +50,27 @@ const MessagesContent = () => (
   </div>
 );
 
-const SharedWalletsContent = () => (
+const SharedWalletsPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Shared Wallets</h2>
     <p className="text-muted-foreground">
       Manage wallets shared with family and friends.
     </p>
-    <SharedWalletTable wallets={fakeSharedWallets} />
+    <div className="p-8 text-center bg-muted rounded-lg">
+      <h3 className="text-xl font-medium">Coming Soon</h3>
+      <p className="mt-2">We're working on building shared wallet features.</p>
+    </div>
   </div>
 );
 
-const SettingsContent = () => (
+const SettingsPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
     <p className="text-muted-foreground">
       Manage your account settings and preferences.
     </p>
     <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Settings Coming Soon</h3>
+      <h3 className="text-xl font-medium">Coming Soon</h3>
       <p className="mt-2">
         We're working on building comprehensive settings for your account.
       </p>
@@ -177,56 +91,26 @@ const DashboardOverview = ({ user }) => (
       </p>
     </div>
 
-    {/* Wallet Section */}
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-      <WalletCard
-        className="md:col-span-2"
-        title="Main Wallet"
-        balance={145320.5}
-      />
-      <div className="grid gap-4 md:col-span-2 lg:col-span-5">
-        <div className="grid gap-4 md:grid-cols-3">
-          <GoalCard
-            title="Holidays"
-            icon={<Plane className="h-4 w-4 text-blue-500" />}
-            current={50000}
-            target={150000}
-          />
-          <GoalCard
-            title="Recreation"
-            icon={<Gamepad className="h-4 w-4 text-green-500" />}
-            current={25000}
-            target={75000}
-          />
-          <GoalCard
-            title="Xbox"
-            icon={<Umbrella className="h-4 w-4 text-orange-500" />}
-            current={35000}
-            target={55000}
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* Transactions and Shared Wallets */}
-    <div className="grid gap-4 md:grid-cols-2">
-      <TransactionHistory transactions={fakeTransactions} />
-      <SharedWalletTable wallets={fakeSharedWallets} />
+    {/* Dashboard content will be loaded from WalletsPage and TransactionsPage */}
+    <div className="grid gap-8">
+      <WalletsPage />
+      <TransactionsPage />
     </div>
   </div>
 );
 
 export default function Dashboard({ activePage = "overview" }) {
   const { user, isAuthenticated, isLoading } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
-  // Close sidebar on mobile when component mounts
+  // Simulate page transition loading
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
-  }, []);
+    setIsPageLoading(true);
+    const timer = setTimeout(() => {
+      setIsPageLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []); // Removed activePage from dependencies
 
   if (isLoading) {
     return (
@@ -247,26 +131,44 @@ export default function Dashboard({ activePage = "overview" }) {
 
   // Render the appropriate content based on the active page
   const renderContent = () => {
+    if (isPageLoading) {
+      return (
+        <div className="space-y-8 animate-in fade-in duration-500">
+          <Skeleton className="h-10 w-1/3" />
+          <Skeleton className="h-4 w-1/4" />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Skeleton className="h-[180px] w-full" />
+            <Skeleton className="h-[180px] w-full" />
+            <Skeleton className="h-[180px] w-full" />
+          </div>
+        </div>
+      );
+    }
+
     switch (activePage) {
       case "wallets":
-        return <WalletsContent />;
+        return <WalletsPage />;
       case "transactions":
-        return <TransactionsContent />;
+        return <TransactionsPage />;
       case "budgets":
-        return <BudgetsContent />;
+        return <BudgetsPage />;
       case "reports":
-        return <ReportsContent />;
+        return <ReportsPage />;
       case "messages":
-        return <MessagesContent />;
+        return <MessagesPage />;
       case "shared":
-        return <SharedWalletsContent />;
+        return <SharedWalletsPage />;
       case "settings":
-        return <SettingsContent />;
+        return <SettingsPage />;
       case "overview":
       default:
         return <DashboardOverview user={user} />;
     }
   };
 
-  return <DashboardLayout>{renderContent()}</DashboardLayout>;
+  return (
+    <DashboardLayout>
+      <div className="animate-in fade-in duration-300">{renderContent()}</div>
+    </DashboardLayout>
+  );
 }

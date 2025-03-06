@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
 
-// Create axios instance with default config
+// Create axios instance with default config - keeping for backward compatibility
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL_DEV,
   headers: {
@@ -45,7 +45,7 @@ api.interceptors.response.use(null, async (error) => {
 // Add a request interceptor to add the token
 api.interceptors.request.use(async (config) => {
   try {
-    const token = await window.Clerk.session?.getToken();
+    const token = await window.Clerk?.session?.getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -77,7 +77,7 @@ export const createSupabaseClient = async () => {
     // Get the Supabase JWT from Clerk
     let token = null;
     try {
-      token = await window.Clerk.session?.getToken({
+      token = await window.Clerk?.session?.getToken({
         template: "supabase",
       });
     } catch (tokenError) {
@@ -126,7 +126,7 @@ export const registerUser = async (userData) => {
 
 export const getCurrentUser = async () => {
   try {
-    const user = await window.Clerk.user?.getCurrent();
+    const user = await window.Clerk?.user?.getCurrent();
     if (!user) {
       throw new Error("No authenticated user");
     }

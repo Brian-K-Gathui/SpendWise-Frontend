@@ -25,14 +25,17 @@ export function DashboardLayout({ children }) {
   }, []);
 
   return (
-    <div className="relative flex min-h-screen">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar - now extends full height */}
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
 
-      {/* Main Content */}
-      <div className="flex-1">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header - now has proper border */}
         <DashboardHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-        <main className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+
+        {/* Content Area */}
+        <main className="flex-1 p-4 pt-6 md:p-8 overflow-auto">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>

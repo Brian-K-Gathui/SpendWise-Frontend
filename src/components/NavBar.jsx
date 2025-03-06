@@ -16,8 +16,6 @@ import {
   SheetTrigger,
   SheetFooter,
 } from "@/components/ui/sheet";
-
-import { SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { useAuth } from "../hooks/useAuth";
 
 export function NavBar() {
@@ -121,14 +119,19 @@ export function NavBar() {
                   </div>
                 ) : (
                   <div className="grid gap-2">
-                    <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full">
-                        Login
-                      </Button>
-                    </SignInButton>
-                    <SignUpButton mode="modal">
-                      <Button className="w-full">Sign up</Button>
-                    </SignUpButton>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => (window.location.href = "/login")}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      className="w-full"
+                      onClick={() => (window.location.href = "/register")}
+                    >
+                      Sign up
+                    </Button>
                   </div>
                 )}
               </div>
@@ -178,23 +181,41 @@ export function NavBar() {
                   Dashboard
                 </Button>
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={logout}
+                className="hidden md:flex"
+              >
+                Logout
+              </Button>
+              {user?.imageUrl && (
+                <Link to="/dashboard">
+                  <div className="h-8 w-8 rounded-full overflow-hidden">
+                    <img
+                      src={user.imageUrl || "/placeholder.svg"}
+                      alt={user.fullName || "User"}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </Link>
+              )}
             </div>
           ) : (
             <>
-              <SignInButton mode="modal">
-                <Button
-                  variant="ghost"
-                  className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
-                >
-                  Login
-                </Button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
-                  Sign up
-                </Button>
-              </SignUpButton>
+              <Button
+                variant="ghost"
+                className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
+                onClick={() => (window.location.href = "/login")}
+              >
+                Login
+              </Button>
+              <Button
+                className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={() => (window.location.href = "/register")}
+              >
+                Sign up
+              </Button>
             </>
           )}
         </div>
