@@ -1,49 +1,75 @@
-export default function SupportPage() {
-    return (
-        <div className="bg-background text-primary-foreground min-h-screen">
-            <header className="bg-primary py-4 px-6">
-                <h1 className="text-2xl font-bold">Support Center</h1>
-            </header>
-            <main className="container mx-auto py-8 px-4">
-                <section className="mb-8">
-                    <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
-                    <div className="bg-card p-4 rounded-lg">
-                        <details className="mb-4">
-                            <summary className="font-semibold">How do I reset my password?</summary>
-                            <p className="mt-2">To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions to reset your password.</p>
-                        </details>
-                        <details className="mb-4">
-                            <summary className="font-semibold">Is my undefined secure?</summary>
-                            <p className="mt-2">Yes, we take undefined security very seriously. All your information is encrypted and stored securely.</p>
-                        </details>
-                        <details className="mb-4">
-                            <summary className="font-semibold">How can I contact support?</summary>
-                            <p className="mt-2">You can contact our support team via email at support@example.com or through the live chat feature on our website.</p>
-                        </details>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="text-xl font-semibold mb-4">Contact Us</h2>
-                    <div className="bg-card p-4 rounded-lg">
-                        <p className="mb-4">If you have any other questions or need further assistance, feel free to reach out to us using the form below:</p>
-                        <form>
-                            <div className="mb-4">
-                                <label htmlFor="name" className="block font-semibold">Name</label>
-                                <input type="text" id="name" className="w-full bg-input text-primary-foreground rounded-lg p-2" placeholder="Your Name" />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block font-semibold">Email</label>
-                                <input type="email" id="email" className="w-full bg-input text-primary-foreground rounded-lg p-2" placeholder="Your Email" />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="message" className="block font-semibold">Message</label>
-                                <textarea id="message" className="w-full bg-input text-primary-foreground rounded-lg p-2" rows="4" placeholder="Your Message"></textarea>
-                            </div>
-                            <button type="submit" className="bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/80">Submit</button>
-                        </form>
-                    </div>
-                </section>
-            </main>
-        </div>
-    )
-}
+import React, { useState } from "react";
+
+const SupportPage = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="max-w-lg w-full bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">Support Center</h2>
+        <p className="text-gray-600 text-center mt-2">How can we help you?</p>
+        
+        {!submitted ? (
+          <form className="mt-4" onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-gray-700">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Message</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            >
+              Submit
+            </button>
+          </form>
+        ) : (
+          <div className="text-center text-green-600 font-semibold mt-4">
+            Thank you for reaching out! We will get back to you soon.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SupportPage;
