@@ -5,7 +5,7 @@ import {
   CreditCard,
   DollarSign,
   Home,
-  MessageSquare,
+  Bell,
   Search,
   Settings,
   Users,
@@ -18,6 +18,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const sidebarLinks = [
   {
@@ -49,9 +50,9 @@ const sidebarLinks = [
     section: "COMMUNICATION",
     items: [
       {
-        title: "Messages",
-        icon: MessageSquare,
-        href: "/dashboard/messages",
+        title: "Notifications",
+        icon: Bell,
+        href: "/dashboard/notifications",
       },
       {
         title: "Shared Wallets",
@@ -80,6 +81,7 @@ const sidebarLinks = [
 export function DashboardSidebar({ open, onOpenChange }) {
   const location = useLocation();
   const { logout } = useAuth();
+  const { unreadCount } = useNotifications();
 
   // Close mobile sidebar on location change
   useEffect(() => {
@@ -147,6 +149,11 @@ export function DashboardSidebar({ open, onOpenChange }) {
                     >
                       <item.icon className="h-4 w-4" />
                       {item.title}
+                      {item.title === "Notifications" && unreadCount > 0 && (
+                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+                          {unreadCount}
+                        </span>
+                      )}
                     </Button>
                   </Link>
                 );
