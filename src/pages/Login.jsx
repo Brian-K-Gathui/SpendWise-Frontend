@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
+import loginPhoto from "../assets/photos/Login.jpg";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -228,8 +229,8 @@ const LoginPage = () => {
       <div className="hidden md:block md:w-1/2 bg-muted rounded-l-[140px] overflow-hidden">
         <div className="h-full relative">
           <img
-            src="/placeholder.svg?height=800&width=600"
-            alt="People on coins"
+            src={loginPhoto}
+            alt="Login Background"
             className="w-full h-full object-cover"
           />
         </div>

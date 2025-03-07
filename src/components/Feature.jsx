@@ -1,5 +1,8 @@
 import { Box, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import photos1 from "../assets/photos/ladies smiling.jpg";
+import photos2 from "../assets/photos/housefund.jpg";
+import photos3 from "../assets/photos/wallet.jpg";
 
 export default function Feature() {
   return (
@@ -100,7 +103,7 @@ export default function Feature() {
           <div className="flex flex-col items-center">
             <div className="mb-4 w-full aspect-video bg-muted rounded-md overflow-hidden">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src={photos1}
                 alt="Create account"
                 className="w-full h-full object-cover"
               />
@@ -117,7 +120,7 @@ export default function Feature() {
           <div className="flex flex-col items-center">
             <div className="mb-4 w-full aspect-video bg-muted rounded-md overflow-hidden">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src={photos2}
                 alt="Set budgets"
                 className="w-full h-full object-cover"
               />
@@ -134,7 +137,7 @@ export default function Feature() {
           <div className="flex flex-col items-center">
             <div className="mb-4 w-full aspect-video bg-muted rounded-md overflow-hidden">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src={photos3}
                 alt="Categorize expenses"
                 className="w-full h-full object-cover"
               />

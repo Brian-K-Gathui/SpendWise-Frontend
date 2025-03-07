@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import RegistrationPhoto from "../assets/photos/Registration.jpg";
 import {
   Select,
   SelectContent,
@@ -248,9 +249,8 @@ const RegistrationPage = () => {
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0"></div>
           <img
-            src="/placeholder.svg?height=800&width=600"
+            src={RegistrationPhoto}
             alt="Red piggy bank with white polka dots"
             className="w-full h-full object-cover rounded-tl-3xl rounded-bl-3xl"
             style={{

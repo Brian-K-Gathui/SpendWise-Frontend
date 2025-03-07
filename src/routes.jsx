@@ -78,6 +78,9 @@ const SettingsPage = () => (
   </div>
 );
 
+// import MainDashboard from "./pages/Dashboard";
+// import DashboardNav from "./components/DashboardNav";
+
 const routers = [
   {
     path: "/",
