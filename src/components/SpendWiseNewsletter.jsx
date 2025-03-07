@@ -1,23 +1,29 @@
-import React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const SpendWiseNewsletter = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white px-6 text-center">
-      <h2 className="text-3xl font-bold text-gray-900">Stay Updated with SpendWise</h2>
-      <p className="mt-2 text-gray-600 max-w-xl">
-        Join our newsletter for the latest tips and updates on managing your finances effectively.
-      </p>
-      <div className="mt-6 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-        <input
-          type="email"
-          placeholder="Your Email Here"
-          className="px-4 py-2 border border-gray-300 rounded-md w-72 focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
-        <button className="px-6 py-2 bg-black text-white rounded-md">Join Now</button>
+    <div className="w-full bg-background text-foreground py-16 md:py-24">
+      <div className="max-w-xl mx-auto px-4 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold">
+          Stay Updated with SpendWise
+        </h2>
+        <p className="mt-3 text-muted-foreground">
+          Join our newsletter for the latest tips and updates on managing your
+          finances effectively.
+        </p>
+        <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
+          <Input
+            type="email"
+            placeholder="Your Email Here"
+            className="w-full"
+          />
+          <Button className="w-full sm:w-auto">Join Now</Button>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          By clicking Join Now, you agree to our Terms and Conditions.
+        </p>
       </div>
-      <p className="mt-2 text-xs text-gray-500">
-        By clicking Join Now, you agree to our Terms and Conditions.
-      </p>
     </div>
   );
 };

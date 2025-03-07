@@ -16,7 +16,6 @@ const Home = () => {
       <SpendWiseNewsletter />
       <ConnectWithUs />
       <MapLayout />
-      
     </>
   );
 };

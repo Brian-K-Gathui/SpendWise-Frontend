@@ -1,7 +1,14 @@
-import { Menu, Contact, BookOpen, Star, Briefcase } from "lucide-react";
+import {
+  Menu,
+  Contact,
+  BookOpen,
+  Star,
+  Briefcase,
+  Loader2,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "../assets/photos/spendwise Logo/1.svg"
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
+import logo from "../assets/photos/spendwise Logo/1.svg";
 import {
   Sheet,
   SheetContent,
@@ -9,9 +16,12 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
-} from "./ui/sheet";
+} from "@/components/ui/sheet";
+import { useAuth } from "../hooks/useAuth";
 
 export function NavBar() {
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
+
   return (
     <nav className="border-b border-border">
       <div className="flex h-16 items-center px-4 md:px-6">
@@ -32,8 +42,7 @@ export function NavBar() {
           >
             <SheetHeader className="border-b border-sidebar-border pb-4">
               <SheetTitle>
-
-              <img src={logo} alt="logo"  className="h-10 w-10"/>
+                <img src={logo} alt="logo" className="h-10 w-10" />
                 <Link to="/" className="h-8 w-8">
                   MW
                 </Link>
@@ -71,49 +80,66 @@ export function NavBar() {
                   to="/contact"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Contact className="h-4 w-4" />
-                  Contact Us
+                  <Contact className="h-4 w-4" /> Contact Us
                 </Link>
                 <Link
                   to="/blog"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <BookOpen className="h-4 w-4" />
-                  Blog
+                  <BookOpen className="h-4 w-4" /> Blog
                 </Link>
                 <Link
                   to="/testimonials"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Star className="h-4 w-4" />
-                  Testimonials
+                  <Star className="h-4 w-4" /> Testimonials
                 </Link>
                 <Link
                   to="/careers"
                   className="flex items-center gap-3 py-2 text-sm font-medium transition-colors hover:text-sidebar-primary"
                 >
-                  <Briefcase className="h-4 w-4" />
-                  Careers
+                  <Briefcase className="h-4 w-4" /> Careers
                 </Link>
               </div>
             </div>
             <SheetFooter className="mt-auto border-t border-sidebar-border pt-4">
               <div className="space-y-4">
-                <div className="grid gap-2">
-                  <Link to="/Login" className="w-full">
-                    <Button variant="outline" className="w-full">
+                {isLoading ? (
+                  <div className="flex justify-center py-2">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  </div>
+                ) : isAuthenticated ? (
+                  <div className="grid gap-2">
+                    <Link to="/dashboard" className="w-full">
+                      <Button variant="outline" className="w-full">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button className="w-full" onClick={logout}>
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => (window.location.href = "/login")}
+                    >
                       Login
                     </Button>
-                  </Link>
-                  <Link to="/register" className="w-full">
-                    <Button className="w-full">Sign up</Button>
-                  </Link>
-                </div>
+                    <Button
+                      className="w-full"
+                      onClick={() => (window.location.href = "/register")}
+                    >
+                      Sign up
+                    </Button>
+                  </div>
+                )}
               </div>
             </SheetFooter>
           </SheetContent>
         </Sheet>
-
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
             <span className="text-xl font-bold text-primary">SW</span>
@@ -148,19 +174,52 @@ export function NavBar() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/login">
-            <Button
-              variant="ghost"
-              className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
-            >
-              Login
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90">
-              Sign up
-            </Button>
-          </Link>
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : isAuthenticated ? (
+            <div className="flex items-center gap-2">
+              <Link to="/dashboard">
+                <Button variant="ghost" size="sm" className="hidden md:flex">
+                  Dashboard
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={logout}
+                className="hidden md:flex"
+              >
+                Logout
+              </Button>
+              {user?.imageUrl && (
+                <Link to="/dashboard">
+                  <div className="h-8 w-8 rounded-full overflow-hidden">
+                    <img
+                      src={user.imageUrl || "/placeholder.svg"}
+                      alt={user.fullName || "User"}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                className="hidden md:flex text-primary hover:bg-primary/10 hover:text-primary"
+                onClick={() => (window.location.href = "/login")}
+              >
+                Login
+              </Button>
+              <Button
+                className="hidden md:flex bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={() => (window.location.href = "/register")}
+              >
+                Sign up
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </nav>
