@@ -25,9 +25,21 @@ export function DashboardHeader({ onMenuClick }) {
 
         {/* Actions Section */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="hidden md:flex">
+          <div>
+          <Button variant="outline" size="sm" className="hidden md:flex" onClick={() => setIsOpen(true)}>
             + Add Expense
           </Button>
+          {isOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <button className="absolute top-2 right-2 text-gray-600" onClick={() => setIsOpen(false)}>
+                  ✖
+                </button>
+                <ExpenseIncomeForm />
+              </div>
+          </div>
+          )}
+          </div>
           <ThemeToggle />
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
