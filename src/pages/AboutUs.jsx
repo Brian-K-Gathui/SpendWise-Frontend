@@ -1,4 +1,7 @@
 import React from 'react';
+import photos1 from "../assets/photos/technologyphoto1.jpg";
+import photos2 from "../assets/photos/technologyphoto2.jpg";
+import photos3 from "../assets/photos/technologyphoto3.jpg";
 
 const AboutUs = () => {
   return (
@@ -43,7 +46,7 @@ const AboutUs = () => {
         <div className="md:w-1/2 relative">
           <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg relative overflow-hidden">
             <img 
-              src="/api/placeholder/500/400" 
+              src={photos1} 
               alt="Developer working on financial interface" 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover rounded-tl-[140px]"
             />
@@ -68,7 +71,7 @@ const AboutUs = () => {
         <div className="md:w-1/2 relative">
           <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg relative overflow-hidden">
             <img 
-              src="/api/placeholder/500/400" 
+              src={photos2}
               alt="Data visualization dashboard" 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover rounded-tl-[140px]"
             />
@@ -93,7 +96,7 @@ const AboutUs = () => {
         <div className="md:w-1/2 relative">
           <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg relative overflow-hidden">
             <img 
-              src="/api/placeholder/500/400" 
+              src={photos3}
               alt="Collaborative finance tools" 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover rounded-tl-[140px]"
             />
@@ -113,16 +116,35 @@ const AboutUs = () => {
           <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg overflow-hidden">
             <img 
               src="/api/placeholder/400/400" 
-              alt="Alex Chen" 
+              alt="Brian Gathui" 
               className="w-full h-full object-cover rounded-tl-[140px] transition duration-500 group-hover:scale-105"
             />
           </div>
           <div className="absolute bottom-0 left-0 bg-black text-white py-3 px-6 font-medium">
-            Alex Chen
+            Brian Gathui
           </div>
           <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-tl-[140px] flex items-center justify-center">
             <div className="text-white text-center p-4">
-              <p className="font-bold mb-2">Lead Developer</p>
+              <p className="font-bold mb-2">Scram Master</p>
+              <p className="text-sm">Expert in secure financial data systems</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="group relative w-72 h-96 transition-all duration-300 hover:translate-y-[-8px]">
+          <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg overflow-hidden">
+            <img 
+              src="/api/placeholder/400/400" 
+              alt="Lewis Odero" 
+              className="w-full h-full object-cover rounded-tl-[140px] transition duration-500 group-hover:scale-105"
+            />
+          </div>
+          <div className="absolute bottom-0 left-0 bg-black text-white py-3 px-6 font-medium">
+            Lewis Odero
+          </div>
+          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-tl-[140px] flex items-center justify-center">
+            <div className="text-white text-center p-4">
+              <p className="font-bold mb-2">Lead Full-Stack Engineer</p>
               <p className="text-sm">Full-stack engineer with 8+ years experience in fintech</p>
             </div>
           </div>
@@ -132,36 +154,35 @@ const AboutUs = () => {
           <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg overflow-hidden">
             <img 
               src="/api/placeholder/400/400" 
-              alt="Maya Johnson" 
+              alt="Marion Nafula" 
               className="w-full h-full object-cover rounded-tl-[140px] transition duration-500 group-hover:scale-105"
             />
           </div>
           <div className="absolute bottom-0 left-0 bg-black text-white py-3 px-6 font-medium">
-            Maya Johnson
-          </div>
-          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-tl-[140px] flex items-center justify-center">
-            <div className="text-white text-center p-4">
-              <p className="font-bold mb-2">UX Engineer</p>
-              <p className="text-sm">Specializes in creating intuitive financial interfaces</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="group relative w-72 h-96 transition-all duration-300 hover:translate-y-[-8px]">
-          <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg overflow-hidden">
-            <img 
-              src="/api/placeholder/400/400" 
-              alt="Raj Patel" 
-              className="w-full h-full object-cover rounded-tl-[140px] transition duration-500 group-hover:scale-105"
-            />
-          </div>
-          <div className="absolute bottom-0 left-0 bg-black text-white py-3 px-6 font-medium">
-            Raj Patel
+            Marion Nafula
           </div>
           <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-tl-[140px] flex items-center justify-center">
             <div className="text-white text-center p-4">
               <p className="font-bold mb-2">Backend Architect</p>
               <p className="text-sm">Expert in secure financial data systems</p>
+            </div>
+          </div>
+        </div>
+        <div className="group relative w-72 h-96 transition-all duration-300 hover:translate-y-[-8px]">
+          <div className="w-full h-80 bg-gray-100 rounded-tl-[140px] shadow-lg overflow-hidden">
+            <img 
+              src="/api/placeholder/400/400" 
+              alt="Michael Ogango" 
+              className="w-full h-full object-cover rounded-tl-[140px] transition duration-500 group-hover:scale-105"
+            />
+          </div>
+          <div className="absolute bottom-0 left-0 bg-black text-white py-3 px-6 font-medium">
+            Michael Ogango
+          </div>
+          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-tl-[140px] flex items-center justify-center">
+            <div className="text-white text-center p-4">
+              <p className="font-bold mb-2">UI/UX Architect</p>
+              <p className="text-sm">Specializes in creating intuitive financial interfaces</p>
             </div>
           </div>
         </div>

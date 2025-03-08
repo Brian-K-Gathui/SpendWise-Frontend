@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
 import VerifyEmail from "./pages/VerifyEmail";
+import AboutUs from "./pages/AboutUs";
+import Features from "./pages/Feature";
 
 // Placeholder components for other dashboard pages
 const BudgetsPage = () => (
@@ -98,6 +100,14 @@ const routers = [
       {
         path: "/register",
         element: <RegistrationPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutUs />,
+      },
+      {
+        path: "/features",
+        element: <Features />,
       },
       {
         path: "/verify-email",
