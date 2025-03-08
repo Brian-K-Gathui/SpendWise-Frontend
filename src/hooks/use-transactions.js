@@ -1,44 +1,70 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiService } from "@/api";
+import { transactionService } from "@/api/services";
 import { toast } from "react-toastify";
+import useAuth from "./useAuth";
 
 export function useTransactions(filters = {}) {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   // Get all transactions with filters
   const transactionsQuery = useQuery({
     queryKey: ["transactions", filters],
-    queryFn: () => apiService.transactions.getAll(filters),
+    queryFn: () => transactionService.getAll(filters),
+    enabled: !!user?.id,
+    // Add retry configuration
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    // Add error handling
+    onError: (error) => {
+      console.error("Error fetching transactions:", error);
+      // Don't show toast for every error to avoid spamming the user
+    },
   });
 
   // Create transaction mutation
   const createTransactionMutation = useMutation({
-    mutationFn: apiService.transactions.create,
+    mutationFn: transactionService.create,
     onSuccess: () => {
       toast.success("Transaction created successfully");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       // Also invalidate wallets as balance might change
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
     },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.error || "Failed to create transaction",
+      );
+    },
   });
 
   // Update transaction mutation
   const updateTransactionMutation = useMutation({
-    mutationFn: ({ id, data }) => apiService.transactions.update(id, data),
+    mutationFn: ({ id, data }) => transactionService.update(id, data),
     onSuccess: () => {
       toast.success("Transaction updated successfully");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
     },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.error || "Failed to update transaction",
+      );
+    },
   });
 
   // Delete transaction mutation
   const deleteTransactionMutation = useMutation({
-    mutationFn: apiService.transactions.delete,
+    mutationFn: transactionService.delete,
     onSuccess: () => {
       toast.success("Transaction deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.error || "Failed to delete transaction",
+      );
     },
   });
 

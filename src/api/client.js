@@ -30,11 +30,15 @@ apiClient.interceptors.response.use(null, async (error) => {
   // Increase the retry count
   config.__retryCount += 1;
 
-  // Create new promise to handle exponential backoff
+  // Create new promise to handle exponential backoff with increasing delay
   const backoff = new Promise((resolve) => {
+    const delay = Math.min(1000 * 2 ** config.__retryCount, 10000); // Max 10 seconds
+    console.log(
+      `Retrying request (${config.__retryCount}/${config.retries}) after ${delay}ms...`,
+    );
     setTimeout(() => {
       resolve();
-    }, config.__retryCount * 1000);
+    }, delay);
   });
 
   // Return the promise in which recalls axios to retry the request
@@ -52,7 +56,8 @@ apiClient.interceptors.request.use(async (config) => {
     return config;
   } catch (error) {
     console.error("Error getting Clerk token:", error);
-    return Promise.reject(error);
+    // Continue without token rather than rejecting the request
+    return config;
   }
 });
 
