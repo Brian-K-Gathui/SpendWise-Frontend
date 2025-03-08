@@ -3,25 +3,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { WalletsPage } from "@/components/dashboard/WalletsPage";
 import { TransactionsPage } from "@/components/dashboard/TransactionsPage";
+import { BudgetsPage } from "@/components/dashboard/BudgetsPage";
+import { NotificationsPage } from "@/components/dashboard/NotificationsPage";
 import { Navigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Placeholder components for other dashboard pages
-const BudgetsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Budgets</h2>
-    <p className="text-muted-foreground">
-      Set and track your spending budgets.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">
-        We're working on building comprehensive budget tracking features.
-      </p>
-    </div>
-  </div>
-);
-
 const ReportsPage = () => (
   <div className="space-y-8">
     <h2 className="text-3xl font-bold tracking-tight">Reports</h2>
@@ -33,19 +20,6 @@ const ReportsPage = () => (
       <p className="mt-2">
         We're working on building comprehensive financial reports for you.
       </p>
-    </div>
-  </div>
-);
-
-const MessagesPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Messages</h2>
-    <p className="text-muted-foreground">
-      View and manage your notifications and messages.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">No Messages</h3>
-      <p className="mt-2">You don't have any messages at this time.</p>
     </div>
   </div>
 );
@@ -110,7 +84,7 @@ export default function Dashboard({ activePage = "overview" }) {
       setIsPageLoading(false);
     }, 500);
     return () => clearTimeout(timer);
-  }, []); // Removed activePage from dependencies
+  }, [activePage]);
 
   if (isLoading) {
     return (
@@ -154,8 +128,8 @@ export default function Dashboard({ activePage = "overview" }) {
         return <BudgetsPage />;
       case "reports":
         return <ReportsPage />;
-      case "messages":
-        return <MessagesPage />;
+      case "notifications":
+        return <NotificationsPage />;
       case "shared":
         return <SharedWalletsPage />;
       case "settings":
