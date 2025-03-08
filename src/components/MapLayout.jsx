@@ -86,25 +86,7 @@ const MapLayout = () => {
           Powered by OpenStreetMap (No API Key Required)
         </p>
 
-        <div className="border border-border rounded-lg overflow-hidden shadow-sm mt-4">
-          <LoadScript
-            googleMapsApiKey="YOUR_API_KEY_HERE"
-            libraries={libraries}
-          >
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={center}
-              zoom={10}
-              onLoad={onMapLoad}
-              mapId={mapId}
-            >
-              {/* Advanced markers are created via the useEffect hook */}
-            </GoogleMap>
-          </LoadScript>
-        </div>
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          Our location
-        </p>
+        
       </div>
     </div>
   );
