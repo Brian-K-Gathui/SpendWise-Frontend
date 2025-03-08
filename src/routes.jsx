@@ -4,6 +4,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
+import SupportPage from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
 
 const routers = [
@@ -59,6 +60,10 @@ const routers = [
       {
         path: "/dashboard/settings",
         element: <Dashboard activePage="settings" />,
+      },
+      {
+        path: "/support",
+        element: <SupportPage activePage="support" />,
       },
       {
         path: "/sso-callback",
