@@ -4,82 +4,8 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
+import SupportPage from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
-
-// Placeholder components for other dashboard pages
-const BudgetsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Budgets</h2>
-    <p className="text-muted-foreground">
-      Set and track your spending budgets.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">
-        We're working on building comprehensive budget tracking features.
-      </p>
-    </div>
-  </div>
-);
-
-const ReportsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Reports</h2>
-    <p className="text-muted-foreground">
-      View financial reports and analytics.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">
-        We're working on building comprehensive financial reports for you.
-      </p>
-    </div>
-  </div>
-);
-
-const MessagesPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Messages</h2>
-    <p className="text-muted-foreground">
-      View and manage your notifications and messages.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">No Messages</h3>
-      <p className="mt-2">You don't have any messages at this time.</p>
-    </div>
-  </div>
-);
-
-const SharedWalletsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Shared Wallets</h2>
-    <p className="text-muted-foreground">
-      Manage wallets shared with family and friends.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">We're working on building shared wallet features.</p>
-    </div>
-  </div>
-);
-
-const SettingsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
-    <p className="text-muted-foreground">
-      Manage your account settings and preferences.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">
-        We're working on building comprehensive settings for your account.
-      </p>
-    </div>
-  </div>
-);
-
-// import MainDashboard from "./pages/Dashboard";
-// import DashboardNav from "./components/DashboardNav";
 
 const routers = [
   {
@@ -124,8 +50,8 @@ const routers = [
         element: <Dashboard activePage="reports" />,
       },
       {
-        path: "/dashboard/messages",
-        element: <Dashboard activePage="messages" />,
+        path: "/dashboard/notifications",
+        element: <Dashboard activePage="notifications" />,
       },
       {
         path: "/dashboard/shared",
@@ -134,6 +60,10 @@ const routers = [
       {
         path: "/dashboard/settings",
         element: <Dashboard activePage="settings" />,
+      },
+      {
+        path: "/support",
+        element: <SupportPage activePage="support" />,
       },
       {
         path: "/sso-callback",
