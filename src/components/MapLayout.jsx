@@ -31,6 +31,7 @@ const position = [49.4521, 11.0767]; // Example: Erlangen, Germany
 // Map ID is required for Advanced Markers
 const mapId = "YOUR_MAP_ID_HERE";
 
+
 const MapLayout = () => {
   const [map, setMap] = useState(null);
   const [advancedMarker, setAdvancedMarker] = useState(null);
@@ -83,6 +84,9 @@ const MapLayout = () => {
               <Popup>Jimmy's Apartment</Popup>
             </Marker>
           </MapContainer>
+        </div>
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          Powered by OpenStreetMap (No API Key Required)
         </div>
         <p className="text-xs text-muted-foreground mt-2 text-center">
           Powered by OpenStreetMap (No API Key Required)

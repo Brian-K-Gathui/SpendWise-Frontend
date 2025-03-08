@@ -80,22 +80,6 @@ const PaymentCard = ({
   );
 };
 
-// Usage example component
-// const CardDemo = () => {
-//   const [hideCardDetails, setHideCardDetails] = React.useState(false);
-  
-//   return (
-//     <div className="p-6 max-w-md mx-auto">
-//       <PaymentCard 
-//         cardNumber="1234 5678 9012 2231"
-//         cardholderName="Michael Odhiambo"
-//         currency="Ksh"
-//         cardType="mastercard"
-//         hideDetails={hideCardDetails}
-//         toggleVisibility={() => setHideCardDetails(!hideCardDetails)}
-//       />
-//     </div>
-//   );
-// };
 
-export default CardDemo;
+
+// export default CardDemo;
