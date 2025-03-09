@@ -179,24 +179,6 @@ export const transactionService = {
       throw error;
     }
   },
-
-  // Get transaction data from Supabase
-  getFromSupabase: async (userId) => {
-    try {
-      const supabase = await createSupabaseClient();
-      const { data, error } = await supabase
-        .from("user_data")
-        .select("data")
-        .eq("user_id", userId)
-        .maybeSingle();
-
-      if (error) throw error;
-      return data?.data?.transactions || [];
-    } catch (error) {
-      console.error("Error fetching transactions from Supabase:", error);
-      throw error;
-    }
-  },
 };
 
 // Budget services
