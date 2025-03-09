@@ -29,33 +29,54 @@ export const useAuth = () => {
           try {
             const supabase = await createSupabaseClient();
 
-            // First check if user exists in user_data
-            const { data: existingData, error: fetchError } = await supabase
-              .from("user_data")
-              .select("*")
-              .eq("user_id", user.id)
-              .limit(1)
-              .single();
+            // Use RPC function to handle upsert properly
+            const { error } = await supabase.rpc("insert_or_update_user_data", {
+              p_user_id: user.id,
+              p_email: userData.email,
+              p_data: userData,
+            });
 
-            if (fetchError && fetchError.code !== "PGRST116") {
-              console.error("Error checking user in Supabase:", fetchError);
-            }
+            if (error) {
+              console.error("Error upserting user data in Supabase:", error);
 
-            // If user doesn't exist or we need to update, upsert the data
-            const { data: updatedData, error: upsertError } = await supabase
-              .from("user_data")
-              .upsert({
-                user_id: user.id,
-                data: userData,
-              })
-              .select()
-              .single();
+              // Fallback to manual check and insert/update if RPC fails
+              const { data: existingData, error: fetchError } = await supabase
+                .from("user_data")
+                .select("*")
+                .eq("user_id", user.id)
+                .maybeSingle();
 
-            if (upsertError) {
-              console.error(
-                "Error upserting user data in Supabase:",
-                upsertError,
-              );
+              if (fetchError && fetchError.code !== "PGRST116") {
+                console.error("Error checking user in Supabase:", fetchError);
+              }
+
+              if (existingData) {
+                // Update existing record
+                const { error: updateError } = await supabase
+                  .from("user_data")
+                  .update({
+                    email: userData.email,
+                    data: userData,
+                  })
+                  .eq("user_id", user.id);
+
+                if (updateError) {
+                  console.error("Error updating user data:", updateError);
+                }
+              } else {
+                // Insert new record
+                const { error: insertError } = await supabase
+                  .from("user_data")
+                  .insert({
+                    user_id: user.id,
+                    email: userData.email,
+                    data: userData,
+                  });
+
+                if (insertError) {
+                  console.error("Error inserting user data:", insertError);
+                }
+              }
             }
 
             // Store user data in our frontend store
@@ -68,7 +89,7 @@ export const useAuth = () => {
               firstName: user.firstName || "",
               lastName: user.lastName || "",
               // Add any additional data from Supabase if needed
-              supabaseData: updatedData?.data || existingData?.data || {},
+              supabaseData: userData,
             });
           } catch (supabaseError) {
             console.error("Error with Supabase operations:", supabaseError);

@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,12 +38,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+// Define a global client key to prevent multiple instances
+export const SUPABASE_CLIENT_KEY = "TRANSACTIONS_PAGE_CLIENT";
+
 export function TransactionsPage() {
   const [filters, setFilters] = useState({});
   const { transactions, isLoading, createTransaction, isPending } =
-    useTransactions(filters);
-  const { wallets, isLoading: walletsLoading } = useWallets();
-  const { categories, isLoading: categoriesLoading } = useCategories();
+    useTransactions(filters, SUPABASE_CLIENT_KEY);
+  const { wallets, isLoading: walletsLoading } =
+    useWallets(SUPABASE_CLIENT_KEY);
+  const { categories, isLoading: categoriesLoading } =
+    useCategories(SUPABASE_CLIENT_KEY);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
 
@@ -52,21 +58,30 @@ export function TransactionsPage() {
     reset,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      category: "default",
+    },
+  });
 
   const onSubmit = async (data) => {
-    await createTransaction({
-      wallet_id: data.wallet_id,
-      category_id: data.category_id,
-      amount: Number.parseFloat(data.amount),
-      type: data.type,
-      description: data.description,
-      date: date.toISOString(),
-      is_recurring: data.is_recurring || false,
-      recurring_interval: data.is_recurring ? data.recurring_interval : null,
-    });
-    setOpen(false);
-    reset();
+    try {
+      await createTransaction({
+        wallet_id: data.wallet_id,
+        category_id: data.category_id,
+        amount: Number.parseFloat(data.amount),
+        type: data.type,
+        description: data.description,
+        date: date.toISOString(),
+        is_recurring: data.is_recurring || false,
+        recurring_interval: data.is_recurring ? data.recurring_interval : null,
+      });
+      setOpen(false);
+      reset();
+    } catch (error) {
+      console.error("Failed to create transaction:", error);
+      // Handle error appropriately
+    }
   };
 
   const applyFilter = (filter) => {
@@ -127,9 +142,16 @@ export function TransactionsPage() {
                 <Plus className="mr-2 h-4 w-4" /> Add Transaction
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent
+              className="max-w-md"
+              aria-describedby="transaction-form-description"
+            >
               <DialogHeader>
                 <DialogTitle>Add New Transaction</DialogTitle>
+                <DialogDescription id="transaction-form-description">
+                  Fill out the form below to add a new transaction to your
+                  account.
+                </DialogDescription>
               </DialogHeader>
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -154,12 +176,12 @@ export function TransactionsPage() {
                             <SelectItem value="loading" disabled>
                               Loading wallets...
                             </SelectItem>
-                          ) : wallets.length === 0 ? (
+                          ) : wallets?.length === 0 ? (
                             <SelectItem value="none" disabled>
                               No wallets available
                             </SelectItem>
                           ) : (
-                            wallets.map((wallet) => (
+                            wallets?.map((wallet) => (
                               <SelectItem
                                 key={wallet.id}
                                 value={wallet.id.toString()}
@@ -228,7 +250,8 @@ export function TransactionsPage() {
                             </SelectItem>
                           ) : (
                             <>
-                              <SelectItem value="" disabled>
+                              {/* Fixed: Replaced empty string with placeholder value */}
+                              <SelectItem value="placeholder" disabled>
                                 Select a category
                               </SelectItem>
                               {expenseCategories.map((category) => (
@@ -345,7 +368,7 @@ export function TransactionsPage() {
 
       {isLoading ? (
         <Skeleton className="h-[400px] w-full" />
-      ) : transactions.length === 0 ? (
+      ) : transactions?.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
           <h3 className="text-lg font-medium">No transactions found</h3>
           <p className="text-sm text-muted-foreground mt-2">
