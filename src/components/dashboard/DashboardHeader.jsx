@@ -11,9 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ExpenseIncomeForm from "@/src/components/dashboard/AddExpense";
 
 export function DashboardHeader({ onMenuClick }) {
   const { notifications, unreadCount } = useNotifications();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,8 +46,6 @@ export function DashboardHeader({ onMenuClick }) {
           <div>
           <Button variant="outline" size="sm" className="hidden md:flex" onClick={() => setIsOpen(true)}>
             + Add Expense
-          <Button variant="outline" size="sm" className="hidden md:flex">
-            <Plus className="mr-2 h-4 w-4" /> Add Expense
           </Button>
           {isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
