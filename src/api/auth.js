@@ -11,7 +11,7 @@ const api = axios.create({
   retries: 3, // Add retry capability
 });
 
-// Add retry logic
+// Add retry logic with exponential backoff
 api.interceptors.response.use(null, async (error) => {
   const config = error.config;
 
@@ -30,11 +30,15 @@ api.interceptors.response.use(null, async (error) => {
   // Increase the retry count
   config.__retryCount += 1;
 
-  // Create new promise to handle exponential backoff
+  // Create new promise to handle exponential backoff with increasing delay
   const backoff = new Promise((resolve) => {
+    const delay = Math.min(1000 * 2 ** config.__retryCount, 10000); // Max 10 seconds
+    console.log(
+      `Retrying request (${config.__retryCount}/${config.retries}) after ${delay}ms...`,
+    );
     setTimeout(() => {
       resolve();
-    }, config.__retryCount * 1000);
+    }, delay);
   });
 
   // Return the promise in which recalls axios to retry the request
@@ -72,6 +76,11 @@ api.interceptors.response.use(
 export const createSupabaseClient = async () => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error("Missing Supabase URL or anon key in environment variables");
+    throw new Error("Supabase configuration is incomplete");
+  }
 
   try {
     // Get the Supabase JWT from Clerk
