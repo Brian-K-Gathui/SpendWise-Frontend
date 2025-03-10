@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ExpenseIncomeForm from "@/src/components/dashboard/AddExpense";
+import ExpenseIncomeForm from "@/components/dashboard/AddExpense";
 
 export function DashboardHeader({ onMenuClick }) {
   const { notifications, unreadCount } = useNotifications();
