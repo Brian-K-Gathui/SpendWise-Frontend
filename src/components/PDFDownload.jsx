@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const DataDownload = () => {
+const DataDownloadPDF = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -51,4 +51,4 @@ const DataDownload = () => {
   );
 };
 
-export default DataDownload;
+export default DataDownloadPDF;

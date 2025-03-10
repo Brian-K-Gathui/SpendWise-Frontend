@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Papa from "papaparse";
 
-const DataDownload = () => {
+const DataDownloadCSV = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -49,4 +49,4 @@ const DataDownload = () => {
   );
 };
 
-export default DataDownload;
+export default DataDownloadCSV;
