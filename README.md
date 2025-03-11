@@ -7,6 +7,8 @@ Managing personal and shared expenses efficiently is a common challenge. Many in
 SpendWise aims to solve these problems by offering a comprehensive and user-friendly expense tracking platform. The application will allow users to create and manage wallets, set budgets, categorize expenses and incomes, and collaborate with others through shared wallets. With a mobile-responsive UI and insightful dashboards, users will gain full visibility into their financial habits, helping them make informed decisions.
 
 ### Frontend Link 💵: https://spend-wise-frontend-coral.vercel.app
+
+### Backend Repo Link: https://github.com/Brian-K-Gathui/SpendWise-Backend.git
 ### Backend Link 💵: https://spendwise-backend-production.vercel.app
 
 ## Tech Stack
