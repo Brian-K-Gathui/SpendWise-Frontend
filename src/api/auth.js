@@ -147,4 +147,132 @@ export const getCurrentUser = async () => {
   }
 };
 
+// Additional functions from the generated code
+
+// Sign in user with email and password
+export const signInUser = async (email, password) => {
+  try {
+    const supabase = await createSupabaseClient();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error("Error signing in:", error);
+    throw error;
+  }
+};
+
+// Sign out user
+export const signOutUser = async () => {
+  try {
+    const supabase = await createSupabaseClient();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) throw error;
+  } catch (error) {
+    console.error("Error signing out:", error);
+    throw error;
+  }
+};
+
+// Reset password (send reset email)
+export const resetPassword = async (email) => {
+  try {
+    const supabase = await createSupabaseClient();
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error;
+  }
+};
+
+// Update password with reset token
+export const updatePasswordWithToken = async (newPassword) => {
+  try {
+    const supabase = await createSupabaseClient();
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw error;
+  }
+};
+
+// Update user profile
+export const updateUserProfile = async (userData) => {
+  try {
+    const supabase = await createSupabaseClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+    if (!user) throw new Error("No user logged in");
+
+    // Get existing user data
+    const { data: existingData, error: fetchError } = await supabase
+      .from("user_data")
+      .select("data")
+      .eq("user_id", user.id)
+      .single();
+
+    if (fetchError && fetchError.code !== "PGRST116") {
+      throw fetchError;
+    }
+
+    // Update user data
+    const updatedData = {
+      ...(existingData?.data || {}),
+      ...userData,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (existingData) {
+      // Update existing record
+      const { error } = await supabase
+        .from("user_data")
+        .update({ data: updatedData })
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+    } else {
+      // Insert new record
+      const { error } = await supabase.from("user_data").insert({
+        user_id: user.id,
+        email: user.email,
+        data: updatedData,
+      });
+
+      if (error) throw error;
+    }
+
+    return { success: true, data: updatedData };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+};
+
 export default api;

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiService, createSupabaseClient } from "@/api";
+import { createSupabaseClient } from "@/api/auth";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,14 @@ export function useSupabaseData() {
       if (!user?.id) return null;
 
       const supabase = await createSupabaseClient();
-      return apiService.supabase.getUserData(supabase, user.id);
+      const { data, error } = await supabase
+        .from("user_data")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
     },
     enabled: !!user?.id,
   });
@@ -22,33 +29,62 @@ export function useSupabaseData() {
   // Update user data mutation
   const updateUserDataMutation = useMutation({
     mutationFn: async (newData) => {
+      if (!user?.id) throw new Error("User not authenticated");
+
       const supabase = await createSupabaseClient();
 
       // Check if user data exists
-      const existingData = await apiService.supabase.getUserData(
-        supabase,
-        user.id,
-      );
+      const { data: existingData, error: fetchError } = await supabase
+        .from("user_data")
+        .select("data")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (fetchError && fetchError.code !== "PGRST116") throw fetchError;
 
       if (existingData) {
         // Update existing data
-        return apiService.supabase.updateUserData(supabase, user.id, {
-          ...existingData.data,
-          ...newData,
-        });
+        const { data, error } = await supabase
+          .from("user_data")
+          .update({
+            data: {
+              ...existingData.data,
+              ...newData,
+              updated_at: new Date().toISOString(),
+            },
+          })
+          .eq("user_id", user.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
       } else {
         // Create new data
-        return apiService.supabase.createUserData(supabase, user.id, {
-          ...newData,
-          email: user.email,
-          full_name: user.fullName,
-          avatar_url: user.imageUrl,
-        });
+        const { data, error } = await supabase
+          .from("user_data")
+          .insert({
+            user_id: user.id,
+            email: user.email,
+            data: {
+              ...newData,
+              created_at: new Date().toISOString(),
+            },
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        return data;
       }
     },
     onSuccess: () => {
       toast.success("Data updated successfully");
       queryClient.invalidateQueries({ queryKey: ["userData", user?.id] });
+    },
+    onError: (error) => {
+      console.error("Error updating user data:", error);
+      toast.error("Failed to update data");
     },
   });
 
@@ -61,3 +97,5 @@ export function useSupabaseData() {
     isPending: updateUserDataMutation.isPending,
   };
 }
+
+export default useSupabaseData;

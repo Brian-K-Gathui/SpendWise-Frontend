@@ -1,4 +1,5 @@
 import App from "./App";
+import SettingsPage from "./components/dashboard/Settings";
 import Dashboard from "./pages/Dashbaord";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
@@ -58,7 +59,7 @@ const routers = [
       },
       {
         path: "/dashboard/settings",
-        element: <Dashboard activePage="settings" />,
+        element: <SettingsPage activePage="settings" />,
       },
       {
         path: "/sso-callback",
