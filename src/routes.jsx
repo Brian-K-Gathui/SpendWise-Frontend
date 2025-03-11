@@ -1,6 +1,5 @@
 import App from "./App";
 import SettingsPage from "./components/dashboard/Settings";
-import Dashboard from "./pages/Dashbaord";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
@@ -9,6 +8,7 @@ import SupportPage from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
 import AboutUs from "./pages/AboutUs";
 import Features from "./pages/Feature";
+import Dashboard from "./pages/Dashbaord";
 
 const routers = [
   {

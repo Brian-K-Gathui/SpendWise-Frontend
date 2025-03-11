@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ExpenseIncomeForm from "/src/components/dashboard/AddExpense";
+import { useState } from "react";
 
 export function DashboardHeader({ onMenuClick }) {
   const { notifications, unreadCount } = useNotifications();
@@ -44,19 +45,27 @@ export function DashboardHeader({ onMenuClick }) {
         {/* Actions Section */}
         <div className="flex items-center gap-2">
           <div>
-          <Button variant="outline" size="sm" className="hidden md:flex" onClick={() => setIsOpen(true)}>
-            + Add Expense
-          </Button>
-          {isOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-                <button className="absolute top-2 right-2 text-gray-600" onClick={() => setIsOpen(false)}>
-                  ✖
-                </button>
-                <ExpenseIncomeForm />
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden md:flex"
+              onClick={() => setIsOpen(true)}
+            >
+              + Add Expense
+            </Button>
+            {isOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                  <button
+                    className="absolute top-2 right-2 text-gray-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    ✖
+                  </button>
+                  <ExpenseIncomeForm />
+                </div>
               </div>
-          </div>
-          )}
+            )}
           </div>
           <ThemeToggle />
           <DropdownMenu>
