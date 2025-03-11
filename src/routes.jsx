@@ -5,7 +5,10 @@ import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegistrationPage from "./pages/RegistrationPage";
+import SupportPage from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
+import AboutUs from "./pages/AboutUs";
+import Features from "./pages/Feature";
 
 const routers = [
   {
@@ -24,6 +27,14 @@ const routers = [
       {
         path: "/register",
         element: <RegistrationPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutUs />,
+      },
+      {
+        path: "/features",
+        element: <Features />,
       },
       {
         path: "/verify-email",
@@ -60,6 +71,10 @@ const routers = [
       {
         path: "/dashboard/settings",
         element: <SettingsPage activePage="settings" />,
+      },
+      {
+        path: "/support",
+        element: <SupportPage activePage="support" />,
       },
       {
         path: "/sso-callback",
