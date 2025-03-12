@@ -1,5 +1,5 @@
 import App from "./App";
-import Dashboard from "./pages/Dashbaord";
+import SettingsPage from "./components/dashboard/Settings";
 import ErrorPage from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
@@ -8,6 +8,7 @@ import SupportPage from "./pages/Support";
 import VerifyEmail from "./pages/VerifyEmail";
 import AboutUs from "./pages/AboutUs";
 import Features from "./pages/Feature";
+import Dashboard from "./pages/Dashbaord";
 
 const routers = [
   {
@@ -60,6 +61,11 @@ const routers = [
         element: <Dashboard activePage="reports" />,
       },
       {
+        path: "/dashboard/recurring",
+        element: <Dashboard activePage="recurring" />,
+      },
+
+      {
         path: "/dashboard/notifications",
         element: <Dashboard activePage="notifications" />,
       },
@@ -69,7 +75,7 @@ const routers = [
       },
       {
         path: "/dashboard/settings",
-        element: <Dashboard activePage="settings" />,
+        element: <SettingsPage activePage="settings" />,
       },
       {
         path: "/support",

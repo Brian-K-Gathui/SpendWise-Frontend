@@ -4,13 +4,14 @@ import { useWallets } from "@/hooks/use-wallets";
 import { useCategories } from "@/hooks/use-categories";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Trash2, Edit } from "lucide-react";
+import { Plus, Trash2, Edit, CalendarIcon, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,6 +39,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "react-toastify";
 
 export function BudgetsPage() {
   const {
@@ -65,26 +67,33 @@ export function BudgetsPage() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const budgetData = {
-      category_id: data.category_id,
-      wallet_id: data.wallet_id,
-      amount: Number.parseFloat(data.amount),
-      period: data.period,
-      start_date: startDate.toISOString(),
-      end_date: endDate ? endDate.toISOString() : null,
-    };
+    try {
+      const budgetData = {
+        category_id: parseInt(data.category_id),
+        wallet_id: parseInt(data.wallet_id),
+        amount: Number.parseFloat(data.amount),
+        period: data.period,
+        start_date: startDate.toISOString(),
+        end_date: endDate ? endDate.toISOString() : null,
+      };
 
-    if (editingBudget) {
-      await updateBudget({ id: editingBudget.id, data: budgetData });
-    } else {
-      await createBudget(budgetData);
+      if (editingBudget) {
+        await updateBudget({ id: editingBudget.id, data: budgetData });
+        toast.success("Budget updated successfully!");
+      } else {
+        await createBudget(budgetData);
+        toast.success("Budget created successfully!");
+      }
+
+      setOpen(false);
+      setEditingBudget(null);
+      reset();
+      setStartDate(new Date());
+      setEndDate(null);
+    } catch (error) {
+      console.error("Error saving budget:", error);
+      toast.error(error.response?.data?.error || "Failed to save budget");
     }
-
-    setOpen(false);
-    setEditingBudget(null);
-    reset();
-    setStartDate(new Date());
-    setEndDate(null);
   };
 
   const handleEdit = (budget) => {
@@ -100,18 +109,103 @@ export function BudgetsPage() {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this budget?")) {
-      await deleteBudget(id);
+      try {
+        await deleteBudget(id);
+        toast.success("Budget deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting budget:", error);
+        toast.error(error.response?.data?.error || "Failed to delete budget");
+      }
     }
   };
 
   const expenseCategories =
     categories?.filter((cat) => cat.type === "expense") || [];
 
-  // Calculate budget progress
+  // budget progress based on actual spending data
   const calculateProgress = (budget) => {
-    // This is a simplified calculation - in a real app, you'd calculate based on actual spending
-    // For now, we'll just return a random percentage between 0 and 100
-    return Math.floor(Math.random() * 100);
+    //!TODO ()-> fetch actual spending for this budget
+    // now, we'll simulate it with a more realistic calculation
+
+    // current date for calculations
+    const now = new Date();
+    const start = new Date(budget.start_date);
+    const end = budget.end_date ? new Date(budget.end_date) : null;
+
+    // Calculate time progress (how far we are into the budget period)
+    let timeProgress = 0;
+
+    if (end) {
+      // If there's an end date, calculate based on start-end interval
+      const totalDuration = end - start;
+      const elapsedDuration = Math.min(now - start, totalDuration);
+      timeProgress = Math.max(
+        0,
+        Math.min(100, (elapsedDuration / totalDuration) * 100),
+      );
+    } else {
+      // For recurring budgets without end date, calculate based on period
+      const dayOfMonth = now.getDate();
+      switch (budget.period) {
+        case "daily":
+          // For daily budget, use hours passed
+          const hoursInDay = 24;
+          const hoursPassed = now.getHours() + now.getMinutes() / 60;
+          timeProgress = (hoursPassed / hoursInDay) * 100;
+          break;
+        case "weekly":
+          // For weekly, use days of week (0-6)
+          const daysInWeek = 7;
+          const dayOfWeek = now.getDay();
+          timeProgress = (dayOfWeek / daysInWeek) * 100;
+          break;
+        case "monthly":
+          // For monthly, use days in month
+          const daysInMonth = new Date(
+            now.getFullYear(),
+            now.getMonth() + 1,
+            0,
+          ).getDate();
+          timeProgress = (dayOfMonth / daysInMonth) * 100;
+          break;
+        case "quarterly":
+          // For quarterly, use month in quarter (0-2)
+          const monthsInQuarter = 3;
+          const monthOfQuarter = now.getMonth() % 3;
+          const daysInCurrentMonth = new Date(
+            now.getFullYear(),
+            now.getMonth() + 1,
+            0,
+          ).getDate();
+          timeProgress =
+            ((monthOfQuarter * daysInCurrentMonth + dayOfMonth) /
+              (monthsInQuarter * 30)) *
+            100;
+          break;
+        case "yearly":
+          // For yearly, use day of year
+          const dayOfYear = Math.floor(
+            (now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24),
+          );
+          const daysInYear = now.getFullYear() % 4 === 0 ? 366 : 365;
+          timeProgress = (dayOfYear / daysInYear) * 100;
+          break;
+        default:
+          timeProgress = 50; // Default fallback
+      }
+    }
+
+    // Simulated spending progress (slightly random but weighted by time progress)
+    // TODO calculatION: (actual spending / budget amount) * 100
+    const randomFactor = 0.8 + Math.random() * 0.4;
+    const spendingProgress = Math.min(100, timeProgress * randomFactor);
+
+    return Math.floor(spendingProgress);
+  };
+
+  // Calculate remaining budget amount
+  const calculateRemaining = (budget, progress) => {
+    return budget.amount - (budget.amount * progress) / 100;
   };
 
   return (
@@ -145,6 +239,11 @@ export function BudgetsPage() {
               <DialogTitle>
                 {editingBudget ? "Edit Budget" : "Create New Budget"}
               </DialogTitle>
+              <DialogDescription>
+                {editingBudget
+                  ? "Update your budget settings"
+                  : "Set a budget to help manage your spending"}
+              </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
               <div className="space-y-2">
@@ -166,12 +265,12 @@ export function BudgetsPage() {
                           <SelectItem value="loading" disabled>
                             Loading wallets...
                           </SelectItem>
-                        ) : wallets.length === 0 ? (
+                        ) : wallets?.length === 0 ? (
                           <SelectItem value="none" disabled>
                             No wallets available
                           </SelectItem>
                         ) : (
-                          wallets.map((wallet) => (
+                          wallets?.map((wallet) => (
                             <SelectItem
                               key={wallet.id}
                               value={wallet.id.toString()}
@@ -209,6 +308,10 @@ export function BudgetsPage() {
                         {categoriesLoading ? (
                           <SelectItem value="loading" disabled>
                             Loading categories...
+                          </SelectItem>
+                        ) : expenseCategories.length === 0 ? (
+                          <SelectItem value="none" disabled>
+                            No expense categories available
                           </SelectItem>
                         ) : (
                           expenseCategories.map((category) => (
@@ -293,6 +396,7 @@ export function BudgetsPage() {
                       variant="outline"
                       className="w-full justify-start text-left font-normal"
                     >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
                       {startDate ? (
                         format(startDate, "PPP")
                       ) : (
@@ -319,6 +423,7 @@ export function BudgetsPage() {
                       variant="outline"
                       className="w-full justify-start text-left font-normal"
                     >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
                       {endDate ? (
                         format(endDate, "PPP")
                       ) : (
@@ -347,15 +452,21 @@ export function BudgetsPage() {
                     setEditingBudget(null);
                     reset();
                   }}
+                  disabled={isPending}
                 >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending
-                    ? "Saving..."
-                    : editingBudget
-                      ? "Update Budget"
-                      : "Create Budget"}
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {editingBudget ? "Updating..." : "Creating..."}
+                    </>
+                  ) : editingBudget ? (
+                    "Update Budget"
+                  ) : (
+                    "Create Budget"
+                  )}
                 </Button>
               </div>
             </form>
@@ -383,13 +494,25 @@ export function BudgetsPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {budgets.map((budget) => {
             const progress = calculateProgress(budget);
+            const remaining = calculateRemaining(budget, progress);
             const wallet = wallets?.find((w) => w.id === budget.wallet_id);
             const category = categories?.find(
               (c) => c.id === budget.category_id,
             );
 
+            // Determine color based on progress
+            const getProgressColor = (value) => {
+              if (value < 70) return "bg-green-500";
+              if (value < 90) return "bg-yellow-500";
+              return "bg-red-500";
+            };
+
             return (
-              <Card key={budget.id}>
+              <Card key={budget.id} className="overflow-hidden">
+                {/* <div
+                  className={`h-1 ${getProgressColor(progress)}`}
+                  style={{ width: `${progress}%` }}
+                ></div> */}
                 <CardHeader className="pb-2">
                   <CardTitle className="flex justify-between">
                     <span>{category?.name || "Budget"}</span>
@@ -405,13 +528,24 @@ export function BudgetsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">
-                    {wallet?.currency || "KES"}{" "}
-                    {Number.parseFloat(budget.amount).toLocaleString()}
+                  <div className="flex justify-between items-end mb-2">
+                    <div className="text-2xl font-bold">
+                      {wallet?.currency || "KES"}{" "}
+                      {Number.parseFloat(budget.amount).toLocaleString()}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Remaining: {wallet?.currency || "KES"}{" "}
+                      {remaining.toFixed(2)}
+                    </div>
                   </div>
-                  <Progress value={progress} className="mt-2" />
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {progress}% used
+                  <Progress
+                    value={progress}
+                    className={`h-2 `}
+                    indicatorClassName={getProgressColor(progress)}
+                  />
+                  <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+                    <span>{progress}% used</span>
+                    <span>{100 - progress}% left</span>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">

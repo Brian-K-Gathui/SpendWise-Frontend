@@ -13,7 +13,7 @@ import {
   notificationService,
 } from "./services";
 
-// Export everything for backward compatibility
+// everything for backward compatibility
 export {
   api,
   apiClient,
@@ -27,8 +27,8 @@ export {
   notificationService,
 };
 
-// Export the endpoints API
+//  endpoints API
 export const apiService = endpoints;
 
-// Default export for convenience
+// Default export
 export default api;

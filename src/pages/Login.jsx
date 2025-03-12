@@ -34,7 +34,7 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
 
-      // Start the sign-in process with Clerk
+      //  sign-in process with Clerk
       const result = await signIn.create({
         identifier: email,
         password,
@@ -45,13 +45,12 @@ const LoginPage = () => {
         const userData = {
           id: result.createdUserId,
           email: email,
-          // Add other user data as needed
         };
         setUser(userData);
         toast.success("Login successful!");
         navigate("/dashboard");
       } else {
-        // Handle additional steps if needed (like 2FA)
+        // !TODOs ->teps if needed (like 2FA)
         console.log(result);
         toast.info("Additional verification required");
       }

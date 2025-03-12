@@ -7,22 +7,19 @@ export function useTransactions(filters = {}) {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // Get all transactions with filters
+  //  all transactions with filters
   const transactionsQuery = useQuery({
     queryKey: ["transactions", filters],
     queryFn: () => transactionService.getAll(filters),
     enabled: !!user?.id,
-    // Add retry configuration
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    // Add error handling
     onError: (error) => {
       console.error("Error fetching transactions:", error);
-      // Don't show toast for every error to avoid spamming the user
     },
   });
 
-  // Create transaction mutation
+  // transaction mutation
   const createTransactionMutation = useMutation({
     mutationFn: transactionService.create,
     onSuccess: () => {

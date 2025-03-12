@@ -80,7 +80,6 @@ export function TransactionsPage() {
       reset();
     } catch (error) {
       console.error("Failed to create transaction:", error);
-      // Handle error appropriately
     }
   };
 
@@ -250,7 +249,7 @@ export function TransactionsPage() {
                             </SelectItem>
                           ) : (
                             <>
-                              {/* Fixed: Replaced empty string with placeholder value */}
+                              {/* !Fixed: Replaced empty string with placeholder value */}
                               <SelectItem value="placeholder" disabled>
                                 Select a category
                               </SelectItem>

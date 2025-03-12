@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/use-notifications";
+import { FileText } from "lucide-react";
 
 const sidebarLinks = [
   {
@@ -39,10 +40,16 @@ const sidebarLinks = [
         icon: DollarSign,
         href: "/dashboard/transactions",
       },
+
       {
         title: "Budgets",
         icon: BarChart3,
         href: "/dashboard/budgets",
+      },
+      {
+        title: "Report",
+        icon: FileText,
+        href: "/dashboard/reports",
       },
     ],
   },
@@ -64,11 +71,11 @@ const sidebarLinks = [
   {
     section: "SETTINGS",
     items: [
-      {
-        title: "Access Control",
-        icon: Shield,
-        href: "/dashboard/access",
-      },
+      // {
+      //   title: "Access Control",
+      //   icon: Shield,
+      //   href: "/dashboard/access",
+      // },
       {
         title: "Settings",
         icon: Settings,
@@ -83,7 +90,7 @@ export function DashboardSidebar({ open, onOpenChange }) {
   const { logout } = useAuth();
   const { unreadCount } = useNotifications();
 
-  // Close mobile sidebar on location change
+  // Close mobile sidebar
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (isMobile && open) {
@@ -91,7 +98,7 @@ export function DashboardSidebar({ open, onOpenChange }) {
     }
   }, [location.pathname, open, onOpenChange]);
 
-  // Fix for sheet popping up on every reload
+  //sheet popping up on every reload
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (!isMobile && open) {

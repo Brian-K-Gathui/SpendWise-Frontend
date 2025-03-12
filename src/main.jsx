@@ -11,7 +11,7 @@ import routes from "./routes";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { queryClient } from "./lib/query-client";
 
-// Import your Publishable Key
+//  Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
