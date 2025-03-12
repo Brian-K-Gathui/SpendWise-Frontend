@@ -3,7 +3,7 @@ import apiClient from "./client";
 
 // Wallet services
 export const walletService = {
-  // Get all wallets for the current user
+  // all wallets for the current user
   getAll: async () => {
     try {
       const response = await apiClient.get("/api/wallets");
@@ -14,7 +14,7 @@ export const walletService = {
     }
   },
 
-  // Get a specific wallet by ID
+  //  specific wallet by ID
   getById: async (id) => {
     try {
       const response = await apiClient.get(`/api/wallets/${id}`);
@@ -25,7 +25,7 @@ export const walletService = {
     }
   },
 
-  // Create a new wallet
+  // new wallet
   create: async (data) => {
     try {
       const response = await apiClient.post("/api/wallets", data);
@@ -58,7 +58,7 @@ export const walletService = {
     }
   },
 
-  // Get wallet data from Supabase
+  //wallet data from Supabase
   getFromSupabase: async (userId) => {
     try {
       const supabase = await createSupabaseClient();
@@ -76,12 +76,12 @@ export const walletService = {
     }
   },
 
-  // Save wallet data to Supabase
+  // wallet data to Supabase
   saveToSupabase: async (userId, wallets) => {
     try {
       const supabase = await createSupabaseClient();
 
-      // First check if user data exists
+      // check if user data exists
       const { data: existingData, error: fetchError } = await supabase
         .from("user_data")
         .select("data")
@@ -123,7 +123,7 @@ export const walletService = {
 
 // Transaction services
 export const transactionService = {
-  // Get all transactions with optional filtering
+  // all transactions with optional filtering
   getAll: async (filters = {}) => {
     try {
       const response = await apiClient.get("/api/transactions", {
@@ -136,7 +136,7 @@ export const transactionService = {
     }
   },
 
-  // Get a specific transaction by ID
+  // transaction by ID
   getById: async (id) => {
     try {
       const response = await apiClient.get(`/api/transactions/${id}`);
@@ -147,7 +147,7 @@ export const transactionService = {
     }
   },
 
-  // Create a new transaction
+  // new transaction
   create: async (data) => {
     try {
       const response = await apiClient.post("/api/transactions", data);
@@ -183,7 +183,7 @@ export const transactionService = {
 
 // Budget services
 export const budgetService = {
-  // Get all budgets for the current user
+  //all budgets for the current user
   getAll: async (walletId = null) => {
     try {
       const params = walletId ? { wallet_id: walletId } : {};
@@ -195,7 +195,7 @@ export const budgetService = {
     }
   },
 
-  // Get a specific budget by ID
+  //  budget by ID
   getById: async (id) => {
     try {
       const response = await apiClient.get(`/api/budgets/${id}`);
@@ -217,7 +217,7 @@ export const budgetService = {
     }
   },
 
-  // Update an existing budget
+  // existing budget update
   update: async (id, data) => {
     try {
       const response = await apiClient.put(`/api/budgets/${id}`, data);
@@ -242,7 +242,7 @@ export const budgetService = {
 
 // Category services
 export const categoryService = {
-  // Get all categories
+  // all categories
   getAll: async () => {
     try {
       const response = await apiClient.get("/api/categories");
@@ -278,7 +278,7 @@ export const categoryService = {
 
 // Notification services
 export const notificationService = {
-  // Get all notifications for the current user
+  // notifications for the current user
   getAll: async () => {
     try {
       const response = await apiClient.get("/api/notifications");

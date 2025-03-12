@@ -7,7 +7,7 @@ export function useSupabaseData() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Get user data from Supabase
+  // ()ser data from Supabase()
   const userDataQuery = useQuery({
     queryKey: ["userData", user?.id],
     queryFn: async () => {

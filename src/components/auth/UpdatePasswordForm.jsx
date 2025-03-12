@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,8 +32,8 @@ export function UpdatePasswordForm() {
 
   // Check if URL contains reset token
   useEffect(() => {
-    // In a real app, you would check for the presence of the reset token in the URL
-    // For this example, we'll assume it's present if we're on the reset-password page
+    // !TOD: ADD check for the presence of the reset token in the URL
+    // NOW , we'll assume it's present if we're on the reset-password page
     const isResetPasswordPage =
       window.location.pathname.includes("reset-password");
     setHasResetToken(isResetPasswordPage);
@@ -43,7 +41,6 @@ export function UpdatePasswordForm() {
 
   // Check password strength
   const checkPasswordStrength = (password) => {
-    // This is a simple implementation - in a real app, use a library like zxcvbn
     let score = 0;
     let feedback = "";
 

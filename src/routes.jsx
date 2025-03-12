@@ -61,6 +61,11 @@ const routers = [
         element: <Dashboard activePage="reports" />,
       },
       {
+        path: "/dashboard/recurring",
+        element: <Dashboard activePage="recurring" />,
+      },
+
+      {
         path: "/dashboard/notifications",
         element: <Dashboard activePage="notifications" />,
       },

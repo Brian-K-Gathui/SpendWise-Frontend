@@ -51,7 +51,7 @@ const RegistrationPage = () => {
     try {
       setIsLoading(true);
 
-      // Start the sign-up process with Clerk
+      // sign-up process with Clerk
       await signUp.create({
         emailAddress: email,
         password,

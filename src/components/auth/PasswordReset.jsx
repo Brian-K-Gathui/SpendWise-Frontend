@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-// import { useToast } from "@/components/ui/use-toast"
 import { Loader2, KeyRound, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { createSupabaseClient } from "@/api/auth";
@@ -20,7 +17,6 @@ import { toast } from "react-toastify";
 
 export function PasswordReset() {
   const { user } = useAuth();
-  // const { toast } = useToast()
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -36,7 +32,7 @@ export function PasswordReset() {
 
   // Check password strength
   const checkPasswordStrength = (password) => {
-    // This is a simple implementation - in a real app, use a library like zxcvbn
+    // !TODO()-> use a library like zxcvbn
     let score = 0;
     let feedback = "";
 
@@ -86,7 +82,7 @@ export function PasswordReset() {
     setIsSubmitting(true);
 
     try {
-      // In a real app, this would call an API to change the password
+      // call an API to change the password
       const supabase = await createSupabaseClient();
 
       // First verify the current password

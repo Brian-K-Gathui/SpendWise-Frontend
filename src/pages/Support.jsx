@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const SupportPage = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
@@ -17,9 +21,11 @@ const SupportPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="max-w-lg w-full bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-800 text-center">Support Center</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+          Support Center
+        </h2>
         <p className="text-gray-600 text-center mt-2">How can we help you?</p>
-        
+
         {!submitted ? (
           <form className="mt-4" onSubmit={handleSubmit}>
             <div className="mb-4">

@@ -88,12 +88,10 @@ export const useAuth = () => {
               imageUrl: userData.avatar_url,
               firstName: user.firstName || "",
               lastName: user.lastName || "",
-              // Add any additional data from Supabase if needed
               supabaseData: userData,
             });
           } catch (supabaseError) {
             console.error("Error with Supabase operations:", supabaseError);
-            // Still set basic user data even if Supabase fails
             setUser({
               id: user.id,
               email: userData.email,
@@ -106,7 +104,6 @@ export const useAuth = () => {
           }
         } catch (error) {
           console.error("Error in overall sync process:", error);
-          // Set basic user data from Clerk as fallback
           setUser({
             id: user.id,
             email: user.primaryEmailAddress?.emailAddress || "",

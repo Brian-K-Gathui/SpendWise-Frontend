@@ -7,7 +7,7 @@ export function useNotifications() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // Get all notifications
+  // all notifications
   const notificationsQuery = useQuery({
     queryKey: ["notifications"],
     queryFn: notificationService.getAll,

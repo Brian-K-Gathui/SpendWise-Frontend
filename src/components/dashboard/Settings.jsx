@@ -24,7 +24,6 @@ import { Switch } from "@/components/ui/switch";
 export default function SettingsPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { userData, updateUserData, isPending } = useSupabaseData();
-  // const { toast } = useToast();
 
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
@@ -40,7 +39,6 @@ export default function SettingsPage() {
     try {
       await updateUserData({
         full_name: `${firstName} ${lastName}`.trim(),
-        // In a real app, you'd update the user's name in Clerk as well
       });
 
       // toast({

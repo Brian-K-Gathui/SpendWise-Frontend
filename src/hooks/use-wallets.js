@@ -7,18 +7,15 @@ export function useWallets() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // Get all wallets
+  //  all wallets
   const walletsQuery = useQuery({
     queryKey: ["wallets"],
     queryFn: walletService.getAll,
     enabled: !!user?.id,
-    // Add retry configuration
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    // Add error handling
     onError: (error) => {
       console.error("Error fetching wallets:", error);
-      // Don't show toast for every error to avoid spamming the user
     },
   });
 
@@ -63,7 +60,7 @@ export function useWallets() {
     mutationFn: async () => {
       if (!user?.id) throw new Error("User not authenticated");
 
-      // Get wallets from API
+      //  wallets from API
       const apiWallets = await walletService.getAll();
 
       // Save to Supabase

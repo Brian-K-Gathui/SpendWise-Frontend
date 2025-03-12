@@ -1,6 +1,6 @@
 import apiClient from "./client";
 
-// API functions organized by resource
+// API functions ()-> resource
 export const endpoints = {
   // User endpoints
   user: {
@@ -38,7 +38,7 @@ export const endpoints = {
     },
   },
 
-  // Transaction endpoints
+  // Transaction
   transactions: {
     getAll: async (params) => {
       const response = await apiClient.get("/transactions", { params });
@@ -62,7 +62,7 @@ export const endpoints = {
     },
   },
 
-  // Supabase data endpoints
+  // Supabase data
   supabase: {
     getUserData: async (supabase, userId) => {
       const { data, error } = await supabase

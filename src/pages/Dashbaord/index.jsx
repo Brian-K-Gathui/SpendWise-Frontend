@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { WalletsPage } from "@/components/dashboard/WalletsPage";
@@ -28,37 +28,10 @@ import { format } from "date-fns";
 import { TransactionHistory } from "@/components/dashboard/TransactionHistory";
 import { FinancialChart } from "@/components/dashboard/FinancialChart";
 import SettingsPage from "@/components/dashboard/Settings";
+import { ReportsPage } from "@/components/dashboard/ReportsPage";
+import { SharedWalletsPage } from "@/components/dashboard/SharedWalletsPage";
+import { RecurringTransactionsPage } from "@/components/dashboard/RecurringTransactionsPage";
 
-// Placeholder components for other dashboard pages
-const ReportsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Reports</h2>
-    <p className="text-muted-foreground">
-      View financial reports and analytics.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">
-        We're working on building comprehensive financial reports for you.
-      </p>
-    </div>
-  </div>
-);
-
-const SharedWalletsPage = () => (
-  <div className="space-y-8">
-    <h2 className="text-3xl font-bold tracking-tight">Shared Wallets</h2>
-    <p className="text-muted-foreground">
-      Manage wallets shared with family and friends.
-    </p>
-    <div className="p-8 text-center bg-muted rounded-lg">
-      <h3 className="text-xl font-medium">Coming Soon</h3>
-      <p className="mt-2">We're working on building shared wallet features.</p>
-    </div>
-  </div>
-);
-
-// Enhanced Dashboard overview content
 const DashboardOverview = ({ user }) => {
   const { wallets, isLoading: walletsLoading } = useWallets();
   const { transactions, isLoading: transactionsLoading } = useTransactions({
@@ -75,38 +48,38 @@ const DashboardOverview = ({ user }) => {
 
   // Calculate financial statistics
   useEffect(() => {
-    if (wallets && transactions) {
-      const totalBalance = wallets.reduce(
-        (sum, wallet) => sum + Number(wallet.balance),
-        0,
-      );
+    if (!wallets || !transactions) return;
 
-      const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const totalBalance = wallets.reduce(
+      (sum, wallet) => sum + Number(wallet.balance),
+      0,
+    );
 
-      const monthlyTransactions = transactions.filter(
-        (t) => new Date(t.date) >= startOfMonth,
-      );
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-      const totalIncome = monthlyTransactions
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+    const monthlyTransactions = transactions.filter(
+      (t) => new Date(t.date) >= startOfMonth,
+    );
 
-      const totalExpense = monthlyTransactions
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+    const totalIncome = monthlyTransactions
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
 
-      setStats({
-        totalBalance,
-        totalIncome,
-        totalExpense,
-        netFlow: totalIncome - totalExpense,
-      });
-    }
+    const totalExpense = monthlyTransactions
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+
+    setStats({
+      totalBalance,
+      totalIncome,
+      totalExpense,
+      netFlow: totalIncome - totalExpense,
+    });
   }, [wallets, transactions]);
 
-  // Prepare data for charts
-  const prepareChartData = () => {
+  // Prepare data for charts - memoize to prevent recalculations
+  const chartData = useMemo(() => {
     if (!transactions || !categories) return { income: [], expense: [] };
 
     const now = new Date();
@@ -144,9 +117,7 @@ const DashboardOverview = ({ user }) => {
         value,
       })),
     };
-  };
-
-  const chartData = prepareChartData();
+  }, [transactions, categories]);
 
   return (
     <div className="space-y-8">
@@ -420,6 +391,8 @@ export default function Dashboard({ activePage = "overview" }) {
         return <BudgetsPage />;
       case "reports":
         return <ReportsPage />;
+      case "recurring":
+        return <RecurringTransactionsPage />;
       case "notifications":
         return <NotificationsPage />;
       case "shared":

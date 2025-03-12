@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +24,7 @@ export function MultiFactorAuth() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mfaMethod, setMfaMethod] = useState("email"); // email or phone
 
-  // Check if MFA is already enabled
+  // ()->if MFA is already enabled
   useEffect(() => {
     const checkMfaStatus = async () => {
       if (!user?.id) return;
@@ -43,7 +41,7 @@ export function MultiFactorAuth() {
 
         if (error) throw error;
 
-        // Check if MFA is enabled in user data
+        // if MFA is enabled in user data
         const mfaEnabled = data?.data?.mfa_enabled || false;
         const savedMfaMethod = data?.data?.mfa_method || "email";
         const savedPhone = data?.data?.phone_number || "";
@@ -76,7 +74,7 @@ export function MultiFactorAuth() {
       }
 
       // Send verification code
-      // In a real implementation, this would call your backend API
+      // !TODO: add twilio or supabase later backend
       // to send a verification code via email or SMS
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -99,7 +97,7 @@ export function MultiFactorAuth() {
     try {
       setIsLoading(true);
 
-      // In a real implementation, this would verify the code with your backend
+      // his would verify the code with your backend
       // For demo purposes, we'll accept any 6-digit code
       if (verificationCode.length !== 6 || !/^\d+$/.test(verificationCode)) {
         toast.error("Please enter a valid 6-digit code");
@@ -108,7 +106,7 @@ export function MultiFactorAuth() {
 
       const supabase = await createSupabaseClient();
 
-      // Get existing user data
+      // existing user data
       const { data: existingData, error: fetchError } = await supabase
         .from("user_data")
         .select("data")

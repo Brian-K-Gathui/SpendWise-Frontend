@@ -7,7 +7,7 @@ export function useBudgets(walletId = null) {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  // Get all budgets
+  // all budgets
   const budgetsQuery = useQuery({
     queryKey: ["budgets", { walletId }],
     queryFn: () => budgetService.getAll(walletId),

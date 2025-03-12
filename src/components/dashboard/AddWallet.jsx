@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const AddWalletForm = () => {
   const [walletData, setWalletData] = useState({
-    name: '',
-    description: '',
-    currency: 'KES',
-    balance: '',
-    type: 'personal',
-    owner_id: '', // This would typically be pre-filled with the current user's ID
+    name: "",
+    description: "",
+    currency: "KES",
+    balance: "",
+    type: "personal",
+    owner_id: "", //  pre-filled with the current user's ID
   });
 
   // List of common currencies
   const currencies = [
-    { code: 'KES', name: 'Kenyan Shilling' },
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'CNY', name: 'Chinese Yuan' }
+    { code: "KES", name: "Kenyan Shilling" },
+    { code: "USD", name: "US Dollar" },
+    { code: "EUR", name: "Euro" },
+    { code: "GBP", name: "British Pound" },
+    { code: "JPY", name: "Japanese Yen" },
+    { code: "CNY", name: "Chinese Yuan" },
   ];
 
   const handleChange = (e) => {
@@ -30,36 +30,41 @@ const AddWalletForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Generate a unique ID (in a real app, this would likely be done on the server)
+
+    // Generate a unique ID ->TODO: Should be done be database
     const newWallet = {
       ...walletData,
       id: `wallet_${Date.now()}`,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
-    
-    console.log('New wallet created:', newWallet);
+
+    console.log("New wallet created:", newWallet);
     alert(`Wallet "${newWallet.name}" created successfully!`);
-    
+
     // Reset form
     setWalletData({
-      name: '',
-      description: '',
-      currency: 'KES',
-      balance: '',
-      type: 'personal',
-      owner_id: walletData.owner_id, // Keep the owner_id
+      name: "",
+      description: "",
+      currency: "KES",
+      balance: "",
+      type: "personal",
+      owner_id: walletData.owner_id, //owner_id
     });
   };
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Add New Wallet</h2>
-      
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        Add New Wallet
+      </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Wallet Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Wallet Name*
           </label>
           <input
@@ -73,7 +78,7 @@ const AddWalletForm = () => {
             required
           />
         </div>
-        
+
         {/* Wallet Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -83,31 +88,34 @@ const AddWalletForm = () => {
             <button
               type="button"
               className={`flex-1 py-2 text-center transition-colors ${
-                walletData.type === 'personal' 
-                  ? 'bg-blue-500 text-white font-medium' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                walletData.type === "personal"
+                  ? "bg-blue-500 text-white font-medium"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
-              onClick={() => setWalletData({ ...walletData, type: 'personal' })}
+              onClick={() => setWalletData({ ...walletData, type: "personal" })}
             >
               Personal
             </button>
             <button
               type="button"
               className={`flex-1 py-2 text-center transition-colors ${
-                walletData.type === 'shared' 
-                  ? 'bg-purple-500 text-white font-medium' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                walletData.type === "shared"
+                  ? "bg-purple-500 text-white font-medium"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
-              onClick={() => setWalletData({ ...walletData, type: 'shared' })}
+              onClick={() => setWalletData({ ...walletData, type: "shared" })}
             >
               Shared
             </button>
           </div>
         </div>
-        
+
         {/* Currency */}
         <div>
-          <label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="currency"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Currency*
           </label>
           <select
@@ -125,21 +133,31 @@ const AddWalletForm = () => {
             ))}
           </select>
         </div>
-        
+
         {/* Initial Balance */}
         <div>
-          <label htmlFor="balance" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="balance"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Initial Balance*
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span className="text-gray-500">
-                {walletData.currency === 'KES' ? 'KSh' : 
-                 walletData.currency === 'USD' ? '$' : 
-                 walletData.currency === 'EUR' ? '€' : 
-                 walletData.currency === 'GBP' ? '£' : 
-                 walletData.currency === 'JPY' ? '¥' : 
-                 walletData.currency === 'CNY' ? '¥' : ''}
+                {walletData.currency === "KES"
+                  ? "KSh"
+                  : walletData.currency === "USD"
+                    ? "$"
+                    : walletData.currency === "EUR"
+                      ? "€"
+                      : walletData.currency === "GBP"
+                        ? "£"
+                        : walletData.currency === "JPY"
+                          ? "¥"
+                          : walletData.currency === "CNY"
+                            ? "¥"
+                            : ""}
               </span>
             </div>
             <input
@@ -156,10 +174,13 @@ const AddWalletForm = () => {
             />
           </div>
         </div>
-        
+
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Description
           </label>
           <textarea
@@ -172,13 +193,13 @@ const AddWalletForm = () => {
             placeholder="Describe the purpose of this wallet..."
           ></textarea>
         </div>
-        
-        
-        {/* Submit Button */}
+
         <button
           type="submit"
           className={`w-full py-2 px-4 rounded-md bg-black-600 text-white font-medium hover:bg-black-700 transition-colors ${
-            walletData.type === 'shared' ? 'bg-purple-600 hover:bg-purple-700' : ''
+            walletData.type === "shared"
+              ? "bg-purple-600 hover:bg-purple-700"
+              : ""
           }`}
         >
           Create Wallet
