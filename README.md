@@ -10,7 +10,7 @@
 
 ## 🌐 Live Demo
 
-[https://spendwise-three.vercel.app/](https://spendwise-three.vercel.app/)
+[https://spend-wise-frontend-coral.vercel.app/](https://spend-wise-frontend-coral.vercel.app/)
 
 ## 📋 Table of Contents
 
