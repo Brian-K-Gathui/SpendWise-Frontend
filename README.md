@@ -9,8 +9,12 @@
 </div>
 
 ## 🌐 Live Demo
-
+# `FrontEnd Live Demo`
 [https://spend-wise-frontend-coral.vercel.app/](https://spend-wise-frontend-coral.vercel.app/)
+# `BackEnd Live Demo`
+[https://spendwise-backend-production.vercel.app/](https://spendwise-backend-production.vercel.app/)
+# `Backend Github project `
+[https://github.com/Brian-K-Gathui/SpendWise-Backend/](https://github.com/Brian-K-Gathui/SpendWise-Backend/)
 
 ## 📋 Table of Contents
 
